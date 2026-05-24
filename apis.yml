@@ -115,6 +115,8 @@ common:
     description: Bring-your-own Docker image support across all rental instances.
   - name: SSH
     description: Direct SSH access to rented instances for development and orchestration.
+- type: LLMsTxt
+  url: https://docs.vast.ai/llms.txt
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
