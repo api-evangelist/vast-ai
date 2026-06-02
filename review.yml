@@ -1,0 +1,104 @@
+aid: vast-ai
+reviewed: '2026-05-29'
+reviewer: API Evangelist
+scope: AsyncAPI streaming surface assessment
+summary: >-
+  Vast.ai does not expose a documented public streaming surface suitable
+  for AsyncAPI modeling. Vast.ai is a decentralized GPU rental
+  marketplace whose control plane is a synchronous REST API at
+  https://console.vast.ai/api/v0. There is no documented public
+  WebSocket, Server-Sent Events, MQTT, AMQP, Kafka, webhook, or HTTP
+  streaming endpoint operated by Vast.ai itself. Vast.ai rents GPU
+  instances on which tenants may run their own inference servers (e.g.
+  vLLM, TGI, custom containers) that may in turn expose SSE or
+  WebSocket streams, but those are tenant-operated surfaces on rented
+  hardware, not a Vast.ai-provided streaming API.
+streaming:
+  hasPublicStreamingSurface: false
+  asyncApiModelable: false
+  reason: >-
+    The Vast.ai REST API is a request/response control plane for
+    searching offers, renting instances, managing machines, templates,
+    volumes, serverless workergroups, and billing. None of the
+    documented endpoints use Server-Sent Events, WebSocket, long-poll
+    streaming, or any other asynchronous transport. Inference
+    streaming, when it occurs, runs inside customer containers on
+    rented GPUs and is governed by the tenant's chosen inference
+    framework, not by a Vast.ai contract. There is no Vast.ai-owned
+    asynchronous protocol to model.
+surfaces:
+  - name: Vast.ai REST API
+    transport: HTTPS REST
+    baseURL: https://console.vast.ai/api/v0
+    public: true
+    asyncApiBindingAvailable: false
+    notes: >-
+      Synchronous JSON over HTTPS with bearer-token authentication.
+      Covers marketplace search, instance lifecycle, machine and
+      template configuration, persistent volumes, serverless endpoint
+      and workergroup management, and billing/usage. Documented as
+      REST in https://docs.vast.ai/api/.
+    references:
+      - https://docs.vast.ai/api/
+      - https://docs.vast.ai/api/authentication
+      - https://console.vast.ai/api/v0
+  - name: Serverless engine routing
+    transport: HTTPS REST
+    public: true
+    asyncApiBindingAvailable: false
+    notes: >-
+      The /serverless/* family (e.g. the route-payload call that
+      returns a ready worker URL or queue status) is a synchronous
+      REST control surface for dispatching work to GPU workers. It
+      returns JSON, not a stream. Any token-level streaming that
+      occurs after dispatch happens inside the customer's worker
+      container (pyworker / custom inference server) and is not a
+      Vast.ai-published streaming contract.
+    references:
+      - https://docs.vast.ai/serverless/
+      - https://github.com/vast-ai/pyworker
+  - name: Tenant inference servers on rented GPUs
+    transport: Tenant-defined (often HTTPS REST with SSE, sometimes WebSocket)
+    public: false
+    asyncApiBindingAvailable: false
+    notes: >-
+      Customers commonly run vLLM, TGI, Ollama, or custom inference
+      stacks inside Docker containers on rented instances, and those
+      stacks may expose SSE or WebSocket streams on the instance's
+      assigned ports. These are not Vast.ai endpoints, are not
+      documented or contractually guaranteed by Vast.ai, and are
+      bound to ephemeral per-rental hosts/ports. They are out of
+      scope for an AsyncAPI document describing Vast.ai itself.
+    references:
+      - https://docs.vast.ai/instances/
+      - https://github.com/vast-ai/base-image
+  - name: Webhooks / event subscriptions
+    transport: None
+    public: false
+    asyncApiBindingAvailable: false
+    notes: >-
+      No public webhook subscription system or event bus is documented
+      for instance state changes, billing events, machine status, or
+      serverless lifecycle. State is observed by polling REST
+      endpoints.
+    references:
+      - https://docs.vast.ai/api/
+decisions:
+  - action: Do not create an AsyncAPI specification for Vast.ai
+    rationale: >-
+      AsyncAPI requires a provider-owned asynchronous transport
+      (WebSocket, SSE, Kafka, MQTT, AMQP, etc.) with a documented
+      contract. Vast.ai exposes only synchronous REST. Modeling
+      tenant-operated inference streams on rented hardware would
+      misrepresent them as a Vast.ai API surface, which they are not.
+  - action: Leave apis.yml unchanged
+    rationale: >-
+      The existing apis.yml accurately catalogs the Vast.ai REST API
+      and associated CLI/SDK resources. No AsyncAPI artifact was
+      produced, so no apis.yml additions are warranted.
+notes: >-
+  Revisit if Vast.ai publishes a first-party streaming control surface
+  - for example, a documented WebSocket for instance/serverless events,
+  an SSE feed for marketplace offer updates, or a standardized
+  streaming inference gateway in front of serverless endpoints with a
+  stable Vast.ai-owned contract.
