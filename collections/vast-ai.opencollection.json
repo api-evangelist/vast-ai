@@ -1,0 +1,1687 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vast.ai API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Network Volumes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "add network-disk",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/network_disk/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds a network disk to be used to create network volume offers, or adds machines to an existing network disk.\nCLI Usage: vast add network_disk <machine_id>... <mount_point> [options]"
+        },
+        {
+          "info": {
+            "name": "list network-volume",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/network_volume/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Lists a network disk for rent as network volumes, or updates an existing listing with a new price/size/end date/discount\nCLI Usage: vast list network-volume <disk_id> [options]"
+        },
+        {
+          "info": {
+            "name": "create network-volume",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/network_volume/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a network volume from an offer\nCLI Usage: vast create network-volume <offer_id>"
+        },
+        {
+          "info": {
+            "name": "search network volumes",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/network_volumes/search/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Search for available GPU machine offers with advanced filtering and sorting.\nCLI Usage: ``` vast search network-volumes --order=storage_cost 'reliability > 0.99 geolocation in [US, CA]'```"
+        },
+        {
+          "info": {
+            "name": "unlist network-volume",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/network_volume/unlist",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Unlists a network volume for rent\nCLI Usage: vast unlist network-volume <offer_id>"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Instances",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "attach ssh-key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/instances/:id/ssh/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the instance to attach the SSH key to"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Attaches an SSH key to the specified instance, allowing SSH access using the provided key.\n\nCLI Usage: vast attach instance_id ssh_key"
+        },
+        {
+          "info": {
+            "name": "copy",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/commands/copy_direct/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Initiate a remote copy operation to transfer data from one instance to another or between an instance and the local machine."
+        },
+        {
+          "info": {
+            "name": "cancel copy",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/commands/copy_direct/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Cancel a remote copy operation specified by the destination ID (dst_id)."
+        },
+        {
+          "info": {
+            "name": "cloud copy",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/commands/rclone/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Starts a cloud copy operation by sending a command to the remote server. The operation can transfer data between an instance and a cloud service."
+        },
+        {
+          "info": {
+            "name": "cancel sync",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/commands/rclone/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Cancels an in-progress remote sync operation identified by the destination instance ID.\nThis operation cannot be resumed once canceled and must be restarted if needed."
+        },
+        {
+          "info": {
+            "name": "change bid",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/instances/bid_price/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Instance ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Change the current bid price of an instance to a specified price.\nCLI Usage: vastai change bid id [--price PRICE]"
+        },
+        {
+          "info": {
+            "name": "create instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/asks/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the offer to accept"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new instance by accepting an \"ask\" contract from a provider. This is the main endpoint for launching new instances on Vast.ai.\nCLI Usage: vast create instance <offer_id> [options]"
+        },
+        {
+          "info": {
+            "name": "show instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/instances/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "123",
+                "type": "path",
+                "description": "The ID of the instance to retrieve."
+              }
+            ]
+          },
+          "docs": "Retrieves the details of a specific instance for the authenticated user.\nThis endpoint returns detailed information including SSH connection parameters, instance state, resource utilization, template data, and pricing details."
+        },
+        {
+          "info": {
+            "name": "manage instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/instances/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "1234",
+                "type": "path",
+                "description": "ID of the instance to modify"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Manage instance state and labels. The operation is determined by the request body parameters.\n\nCLI Usage:\n- To stop: vastai stop instance <ID>\n- To start: vastai start instance <ID>\n- To label: vastai label instance <ID> <label>"
+        },
+        {
+          "info": {
+            "name": "destroy instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/instances/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "4242",
+                "type": "path",
+                "description": "ID of the instance to destroy"
+              }
+            ]
+          },
+          "docs": "Destroys/deletes an instance permanently. This is irreversible and will delete all data.\n\nCLI Usage: vast-ai destroy instance <id>\nExample: vast-ai destroy instance 4242"
+        },
+        {
+          "info": {
+            "name": "detach ssh-key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/instances/:id/ssh/:key/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the instance to detach the SSH key from"
+              },
+              {
+                "name": "key",
+                "value": "",
+                "type": "path",
+                "description": "Numeric ID of the SSH key to detach"
+              }
+            ]
+          },
+          "docs": "Detaches an SSH key from a specified instance, removing SSH access for\nthat key.\n\n\nCLI Usage: vastai detach <instance_id> <ssh_key_id>\n\nExample: vastai detach 99999 12345"
+        },
+        {
+          "info": {
+            "name": "execute",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/instances/command/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the instance to execute command on"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Executes a constrained remote command on a specified instance.\nThe command output can be retrieved from the returned result URL.\n\nCLI Usage: vastai execute <instance_id> <command>\nExample: vastai execute 12345 \"ls -l\""
+        },
+        {
+          "info": {
+            "name": "show logs",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/instances/request_logs/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the instance to get logs from"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Request logs from a specific instance. The logs will be uploaded to S3 and\ncan be retrieved from a generated URL. Supports both container logs and daemon\nsystem logs.\n\nCLI Usage: vast logs INSTANCE_ID [--tail LINES] [--filter GREP] [--daemon-logs]"
+        },
+        {
+          "info": {
+            "name": "prepay instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/instances/prepay/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the instance to prepay for"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Deposit credits into a reserved instance to receive usage discounts.\nThe discount rate is calculated based on how many months of usage the prepaid amount covers.\nMaximum discount is typically 40%.\n\nCLI Usage: vastai prepay instance <ID> <AMOUNT>\nExample: vastai prepay instance 1234 500.0"
+        },
+        {
+          "info": {
+            "name": "reboot instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/instances/reboot/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "1234",
+                "type": "path",
+                "description": "ID of the instance to reboot"
+              }
+            ]
+          },
+          "docs": "Stops and starts a container without losing GPU priority. Updates container status to 'rebooting'\nand executes docker stop/start commands on the host machine.\n\nCLI Usage: vastai reboot instance <ID>"
+        },
+        {
+          "info": {
+            "name": "recycle instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/instances/recycle/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "1234",
+                "type": "path",
+                "description": "ID of the instance to recycle"
+              }
+            ]
+          },
+          "docs": "Destroys and recreates container in place (from newly pulled image) without losing GPU priority.\nUpdates container status to 'recycling' and executes docker stop/remove commands on the host machine.\n\nCLI Usage: vastai recycle instance <ID>"
+        },
+        {
+          "info": {
+            "name": "show ssh-keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/instances/:instance_id/ssh/",
+            "params": [
+              {
+                "name": "instance_id",
+                "value": "17816188",
+                "type": "path",
+                "description": "The ID of the instance to retrieve SSH keys for."
+              }
+            ]
+          },
+          "docs": "Retrieves the SSH keys associated with a specific instance."
+        },
+        {
+          "info": {
+            "name": "show instances",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/instances/"
+          },
+          "docs": "Retrieve a list of instances for the authenticated user.\n\nCLI Usage: vast-ai show instances [OPTIONS] [--api-key API_KEY] [--raw]"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Machines",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "cancel maint",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/machines/:machine_id/cancel_maint",
+            "params": [
+              {
+                "name": "machine_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the machine to cancel maintenance for."
+              }
+            ]
+          },
+          "docs": "Cancel a scheduled maintenance window for a specified machine."
+        },
+        {
+          "info": {
+            "name": "cleanup machine",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/machines/:machine_id/cleanup",
+            "params": [
+              {
+                "name": "machine_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the machine to clean up."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint removes expired contracts on a specified machine, freeing up space.\n\nCLI Usage: vast-ai cleanup machine {machine_id}"
+        },
+        {
+          "info": {
+            "name": "list machine",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/machines/create_asks/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates or updates ask contracts for a machine to list it for rent on the vast.ai platform.\nAllows setting pricing, minimum GPU requirements, end date and discount rates.\n\nCLI Usage: vast list machine <machine_id> [options]"
+        },
+        {
+          "info": {
+            "name": "remove defjob",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/machines/:machine_id/defjob",
+            "params": [
+              {
+                "name": "machine_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the machine to remove the default job from."
+              }
+            ]
+          },
+          "docs": "Deletes the default job (background instances) for a specified machine.\n\nCLI Usage: vast-ai remove defjob {machine_id}"
+        },
+        {
+          "info": {
+            "name": "show reports",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/machines/:machine_id/reports",
+            "params": [
+              {
+                "name": "machine_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the machine."
+              }
+            ]
+          },
+          "docs": "Retrieves a list of the most recent reports for a given machine. Each report includes details such as the problem identified, a message describing the issue, and the timestamp when the report was created.\n\nCLI Usage: vastai reports <machine_id>"
+        },
+        {
+          "info": {
+            "name": "schedule maint",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/machines/:machine_id/dnotify",
+            "params": [
+              {
+                "name": "machine_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the machine to schedule maintenance for."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Schedules a maintenance window for a specified machine and notifies clients.\n\nCLI Usage: vast-ai schedule maint {machine_id} --sdate {sdate} --duration {duration}"
+        },
+        {
+          "info": {
+            "name": "set defjob",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/machines/create_bids/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates default jobs (background instances) for a specified machine with the given parameters.\n\nCLI Usage: vast set defjob {machine_id} --price_gpu {price} --price_inetu {price} --price_inetd {price} --image {image} [--args {args}]"
+        },
+        {
+          "info": {
+            "name": "set min-bid",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/machines/:machine_id/minbid",
+            "params": [
+              {
+                "name": "machine_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the machine."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sets the minimum bid price for a specified machine.\n\nCLI Usage: vast set min-bid {machine_id} --price {price}"
+        },
+        {
+          "info": {
+            "name": "show machines",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/machines/",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the user whose machines are being requested."
+              }
+            ]
+          },
+          "docs": "Fetches data for multiple machines associated with the authenticated user."
+        },
+        {
+          "info": {
+            "name": "unlist machine",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/machines/:machine_id/asks",
+            "params": [
+              {
+                "name": "machine_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the machine to unlist."
+              }
+            ]
+          },
+          "docs": "Removes all 'ask' type offer contracts for a specified machine, effectively unlisting it from being available for rent.\n\nCLI Usage: vastai unlist machine <id>"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "show api keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/auth/apikeys/"
+          },
+          "docs": "Retrieves all API keys associated with the authenticated user.\n\nCLI Usage: vastai show api-keys"
+        },
+        {
+          "info": {
+            "name": "create api-key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/auth/apikeys/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new API key with specified permissions for the authenticated user.\n\nCLI Usage: vast create api-key --name NAME --permission_file PERMISSIONS [--key_params PARAMS]\n\nExample:\nvast create api-key --name \"read-only\" --permission_file permissions.json"
+        },
+        {
+          "info": {
+            "name": "show env vars",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/secrets/"
+          },
+          "docs": "Retrieve a list of environment variables (secrets) for the authenticated user.\n\nCLI Usage: vast-ai show env-vars [-s]"
+        },
+        {
+          "info": {
+            "name": "create env-var",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/secrets/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new encrypted environment variable for the authenticated user.\nKeys are automatically converted to uppercase. Values are encrypted before storage.\nThere is a limit on the total number of environment variables per user.\n\nCLI Usage: vast create env-var KEY VALUE"
+        },
+        {
+          "info": {
+            "name": "update env var",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/secrets/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the value of an existing environment variable for the authenticated user.\n\nCLI Usage: vast-ai set env-var KEY VALUE"
+        },
+        {
+          "info": {
+            "name": "delete env var",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/secrets/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Deletes an environment variable associated with the authenticated user.\nThe variable must exist and belong to the requesting user.\n\nCLI Usage: vastai delete env-var <name>"
+        },
+        {
+          "info": {
+            "name": "show ssh keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/ssh/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Retrieve a list of SSH keys associated with the authenticated user's account."
+        },
+        {
+          "info": {
+            "name": "create ssh-key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/ssh/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new SSH key and associates it with your account.\nThe key will be automatically added to all your current instances.\n\nCLI Usage: vast create ssh-key <ssh_key>\nExample: vast create ssh-key \"ssh-rsa AAAAB3NzaC1...\""
+        },
+        {
+          "info": {
+            "name": "create subaccount",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/users/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates either a standalone user account or a subaccount under a parent account.\nSubaccounts can be restricted to host-only functionality.\n\nCLI Usage: vastai create subaccount --email EMAIL --username USERNAME --password PASSWORD --type host"
+        },
+        {
+          "info": {
+            "name": "set user",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/users/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the user data for the authenticated user.\n\nCLI Usage: vast set user --file {file_path}"
+        },
+        {
+          "info": {
+            "name": "show api key",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/auth/apikeys/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "123",
+                "type": "path",
+                "description": "ID of the API key to retrieve"
+              }
+            ]
+          },
+          "docs": "Retrieves an existing API key belonging to the authenticated user.\n\nCLI Usage: vastai show api-key ID"
+        },
+        {
+          "info": {
+            "name": "delete api key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/auth/apikeys/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "123",
+                "type": "path",
+                "description": "ID of the API key to delete"
+              }
+            ]
+          },
+          "docs": "Deletes an existing API key belonging to the authenticated user.\nThe API key is soft-deleted by setting a deleted_at timestamp.\n\nCLI Usage: vastai delete api-key ID"
+        },
+        {
+          "info": {
+            "name": "update ssh key",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/ssh/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the SSH key to update"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the specified SSH key with the provided value.\n\nCLI Usage: vastai update ssh-key id ssh_key"
+        },
+        {
+          "info": {
+            "name": "delete ssh key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/ssh/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the SSH key to delete"
+              }
+            ]
+          },
+          "docs": "Removes an SSH key from the authenticated user's account\nCLI Usage: vastai delete ssh-key <id>`"
+        },
+        {
+          "info": {
+            "name": "reset api key",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/commands/reset_apikey/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Resets the API key for the authenticated user. This operation generates a new API key and invalidates the old one.\n\nCLI Usage: vast-ai reset api-key"
+        },
+        {
+          "info": {
+            "name": "show connections",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/users/cloud_integrations/"
+          },
+          "docs": "Retrieves the list of cloud connections associated with the authenticated user.\n\nCLI Usage: vastai show connections"
+        },
+        {
+          "info": {
+            "name": "show ipaddrs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/users/:user_id/ipaddrs/",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "me",
+                "type": "path",
+                "description": "The ID of the user whose IP address history is being retrieved."
+              }
+            ]
+          },
+          "docs": "This endpoint retrieves the history of IP address accesses for the authenticated user.\n\nCLI Usage: vast-ai show ipaddrs"
+        },
+        {
+          "info": {
+            "name": "show subaccounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/subaccounts/"
+          },
+          "docs": "Retrieve a list of subaccounts associated with the authenticated user's account.\n\nCLI Usage: vast-ai show subaccounts"
+        },
+        {
+          "info": {
+            "name": "show team role",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/team/roles/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "admin",
+                "type": "path",
+                "description": "Name of the team role"
+              }
+            ]
+          },
+          "docs": "Retrieve details of a specific team role by its name.\n\nCLI Usage: vastai show team-role NAME"
+        },
+        {
+          "info": {
+            "name": "show user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/users/current/"
+          },
+          "docs": "Retrieve information about the current authenticated user, excluding the API key.\n\nCLI Usage: vastai show user"
+        },
+        {
+          "info": {
+            "name": "transfer credit",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/commands/transfer_credit/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Transfers specified amount of credits from the authenticated user's account to another user's account.\nThe recipient can be specified by either email address or user ID.\n\nCLI Usage: vast.py transfer credit <recipient_email> <amount>"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Serverless",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "show workergroup",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/workergroups/"
+          },
+          "docs": "Retrieves the list of workergroups associated with the authenticated user.\n\nCLI Usage: vastai show workergroups"
+        },
+        {
+          "info": {
+            "name": "create workergroup",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/workergroups/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new workergroup configuration that manages worker instances for a serverless endpoint.\n\nCLI Usage: vast-ai create workergroup --template_hash <HASH> --endpoint_name <NAME> [options]"
+        },
+        {
+          "info": {
+            "name": "show endpoints",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/endptjobs/"
+          },
+          "docs": "Retrieve a list of endpoint jobs for the authenticated user."
+        },
+        {
+          "info": {
+            "name": "create endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/endptjobs/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint creates a new job processing endpoint with specified parameters.\n\nCLI Usage: vast-ai create endpoint"
+        },
+        {
+          "info": {
+            "name": "update workergroup",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/workergroups/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the workergroup to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the properties of an existing workergroup based on the provided parameters.\n\nCLI Usage: vastai update workergroup <ID> [OPTIONS]"
+        },
+        {
+          "info": {
+            "name": "delete workergroup",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/workergroups/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the workergroup to delete"
+              }
+            ]
+          },
+          "docs": "Deletes an existing workergroup.\n\nCLI Usage: vastai delete workergroup <ID>"
+        },
+        {
+          "info": {
+            "name": "update endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/endptjobs/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the endpoint group to update"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the specified endpoint group with the provided parameters.\n\nCLI Usage: vastai update endpoint ID [OPTIONS]"
+        },
+        {
+          "info": {
+            "name": "delete endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/endptjobs/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the endpoint group to delete"
+              }
+            ]
+          },
+          "docs": "Deletes an endpoint group by ID. Associated workergroups will also be deleted.\n\nCLI Usage: vastai delete endpoint <ID>"
+        },
+        {
+          "info": {
+            "name": "get workergroup logs",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/get_workergroup_logs/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves logs for a specific workergroup by ID."
+        },
+        {
+          "info": {
+            "name": "get workergroup workers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/get_workergroup_workers/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves the current list and status of workers for a specific workergroup.\n\nUseful for monitoring, debugging connectivity issues, and understanding resource usage within a workergroup."
+        },
+        {
+          "info": {
+            "name": "get endpoint logs",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/get_endpoint_logs/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves logs for a specific endpoint by name."
+        },
+        {
+          "info": {
+            "name": "get endpoint workers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/get_endpoint_workers/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves the current list and status of workers for a specific endpoint.\n\nUseful for monitoring, debugging connectivity issues, and understanding resource usage."
+        },
+        {
+          "info": {
+            "name": "route",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/route/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Calls on the serverless engine to retrieve a GPU instance address within your endpoint for processing a request.\n\nThe engine will return either a ready worker URL or status information if no workers are available."
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Team",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "create team",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/team",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new team with the authenticated user as the owner. The user's existing API key\nbecomes the owner key for the team. The user cannot already be a team or be a member of another team.\n\nThe operation:\n1. Converts the user into a team\n2. Creates default team roles (member, manager, owner)\n3. Converts user's API key into the owner key\n4. Adds the creating user as a team member\n\nCLI Usage: vast create team --name <team_name>"
+        },
+        {
+          "info": {
+            "name": "create team role",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/team/role",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new role within a team. Only team owners or managers with the appropriate permissions can perform this operation.\n\nCLI Usage: vast create team role --name <role_name> --permissions <permissions_json>"
+        },
+        {
+          "info": {
+            "name": "destroy team",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/team/"
+          },
+          "docs": "Deletes a team and all associated data including API keys, rights, invitations,\nmemberships and metadata. The team owner's master API key is converted to a normal client key.\n\nCLI Usage: vast-ai destroy team"
+        },
+        {
+          "info": {
+            "name": "invite team member",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/team/invite/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sends an invitation email to the specified user to join the team with the given role.\n\nCLI Usage: vast-ai invite team-member --email EMAIL --role ROLE"
+        },
+        {
+          "info": {
+            "name": "remove team member",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/team/members/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "12345",
+                "type": "path",
+                "description": "User ID of the team member to remove"
+              }
+            ]
+          },
+          "docs": "Removes a member from the team by revoking their team-related API keys and updating membership status.\nCannot remove the team owner.\n\nCLI Usage: vast-ai remove team-member ID\nExample: vast-ai remove team-member 12345"
+        },
+        {
+          "info": {
+            "name": "remove team role",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/team/roles/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "developer",
+                "type": "path",
+                "description": "Name of the role to remove"
+              }
+            ]
+          },
+          "docs": "Removes a role from the team. Cannot remove the team owner role.\n\nCLI Usage: vast-ai remove team-role NAME\nExample: vast-ai remove team-role developer"
+        },
+        {
+          "info": {
+            "name": "show team members",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/team/members/"
+          },
+          "docs": "Retrieve a list of team members associated with the authenticated user's team.\n\nCLI Usage: vastai show team-members"
+        },
+        {
+          "info": {
+            "name": "update team role",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/team/roles/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the role to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Update an existing team role with new name and permissions."
+        },
+        {
+          "info": {
+            "name": "show team roles",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/team/roles-full/"
+          },
+          "docs": "Retrieve a list of all roles for a team, excluding the 'team_owner' role.\n\nCLI Usage: vastai show team-roles"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Search",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "search templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/template/",
+            "params": [
+              {
+                "name": "query",
+                "value": "",
+                "type": "query",
+                "description": "Search query string to match against template fields."
+              },
+              {
+                "name": "select_filters",
+                "value": "",
+                "type": "query",
+                "description": "Filters to apply on the search results."
+              },
+              {
+                "name": "order_by",
+                "value": "",
+                "type": "query",
+                "description": "Column to order the results by."
+              }
+            ]
+          },
+          "docs": "Searches for templates based on query parameters and retrieves matching templates.\n\nCLI Usage: vast search templates"
+        },
+        {
+          "info": {
+            "name": "search benchmarks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/benchmarks/",
+            "params": [
+              {
+                "name": "query",
+                "value": "score>1000",
+                "type": "query",
+                "description": "Search query string to filter benchmarks."
+              }
+            ]
+          },
+          "docs": "Retrieve benchmark data based on search parameters.\n\nCLI Usage: vast-ai search benchmarks"
+        },
+        {
+          "info": {
+            "name": "search offers",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/search/asks/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Search for available GPU machine offers with advanced filtering and sorting.\nDefault filters applied unless --no-default: - verified: true - external: false - rentable: true - rented: false\nCLI Usage Examples: ``` vast search offers 'reliability > 0.99 num_gpus>=4' vast search offers 'gpu_name=RTX_3090' --order=dph_total vast search offers 'cuda_vers>=11.0' --no-default ```"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Templates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "create template",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/template/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new template for launching instances. If an identical template already exists,\nreturns the existing template instead of creating a duplicate.\n\nCLI Usage: vast create template [options]"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Volumes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "delete volume",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/volumes",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete a volume by its ID. CLI Usage: vastai delete volume VOLUME_ID"
+        },
+        {
+          "info": {
+            "name": "list volumes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/volumes/"
+          },
+          "docs": "Retrieve information about all volumes rented by you. CLI Usage: vastai show volumes"
+        },
+        {
+          "info": {
+            "name": "rent volume",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/volumes/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Rent/create a new volume with specified parameters. CLI Usage: vastai create volume ID --size SIZE_GB"
+        },
+        {
+          "info": {
+            "name": "search volumes",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/volumes/search/",
+            "params": [
+              {
+                "name": "q",
+                "value": "[object Object]",
+                "type": "query",
+                "description": "Query parameters for filtering volume search results"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Search for available volumes based on specified criteria. CLI Usage: vastai search volumes <query> [OPTIONS]"
+        },
+        {
+          "info": {
+            "name": "unlist volume",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/volumes/unlist",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Remove a volume listing from the marketplace. CLI Usage: vastai unlist volume VOLUME_ID"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Billing",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "search invoices",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/invoices",
+            "params": [
+              {
+                "name": "select_filters",
+                "value": "",
+                "type": "query",
+                "description": "Filters to apply to the invoice selection."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Type of invoices to retrieve (e.g., charge)."
+              }
+            ]
+          },
+          "docs": "This endpoint allows users to search and retrieve invoices based on specified filters.\n\nCLI Usage: vast-ai search invoices"
+        },
+        {
+          "info": {
+            "name": "show deposit",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/instances/balance/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the instance."
+              }
+            ]
+          },
+          "docs": "Retrieves the deposit details for a specified instance.\n\nCLI Usage: vast show deposit {ID}"
+        },
+        {
+          "info": {
+            "name": "show earnings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/users/:user_id/machine-earnings/",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              },
+              {
+                "name": "sday",
+                "value": "",
+                "type": "query",
+                "description": "Start day for the earnings report."
+              },
+              {
+                "name": "eday",
+                "value": "",
+                "type": "query",
+                "description": "End day for the earnings report."
+              },
+              {
+                "name": "machid",
+                "value": "",
+                "type": "query",
+                "description": "Optional machine ID to filter earnings."
+              },
+              {
+                "name": "last_days",
+                "value": "",
+                "type": "query",
+                "description": "Number of days to look back from today."
+              }
+            ]
+          },
+          "docs": "Retrieves the earnings history for a specified time range and optionally per machine.\n\nCLI Usage: vastai show earnings [OPTIONS]"
+        },
+        {
+          "info": {
+            "name": "show invoices",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/users/:user_id/invoices/",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "me",
+                "type": "path",
+                "description": "The ID of the user whose invoices are being retrieved."
+              },
+              {
+                "name": "inc_charges",
+                "value": "true",
+                "type": "query",
+                "description": "Include charge items in the report."
+              },
+              {
+                "name": "only_payouts",
+                "value": "false",
+                "type": "query",
+                "description": "Show only payout items."
+              },
+              {
+                "name": "no_payouts",
+                "value": "false",
+                "type": "query",
+                "description": "Exclude payout items."
+              },
+              {
+                "name": "sdate",
+                "value": "2023-01-01T00:00:00Z",
+                "type": "query",
+                "description": "Start date and time for the report."
+              },
+              {
+                "name": "edate",
+                "value": "2023-12-31T23:59:59Z",
+                "type": "query",
+                "description": "End date and time for the report."
+              }
+            ]
+          },
+          "docs": "This endpoint retrieves billing history reports for the authenticated user, including charges and credits.\n\nCLI Usage: vast-ai show invoices"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
