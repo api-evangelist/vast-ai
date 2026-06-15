@@ -1,0 +1,1084 @@
+"""
+Vast.ai GraphQL Schema
+Conceptual schema derived from the Vast.ai REST API covering the full GPU marketplace surface:
+instance rental, machine offers, container management, SSH access, billing, serverless, and volumes.
+"""
+
+# ──────────────────────────────────────────────
+# Scalar types
+# ──────────────────────────────────────────────
+
+scalar DateTime
+scalar JSON
+scalar Float64
+scalar BigInt
+
+# ──────────────────────────────────────────────
+# Enum types
+# ──────────────────────────────────────────────
+
+enum InstanceStatus {
+  RUNNING
+  LOADING
+  STOPPED
+  EXITED
+  SCHEDULING
+  ERROR
+  OFFLINE
+}
+
+enum InstanceType {
+  ON_DEMAND
+  INTERRUPTIBLE
+  RESERVED
+}
+
+enum DiskType {
+  HDD
+  SSD
+  NVME
+}
+
+enum InternetType {
+  FIBER
+  CABLE
+  DSL
+  MOBILE
+}
+
+enum OfferType {
+  ASK
+  BID
+}
+
+enum BillingStatus {
+  PAID
+  UNPAID
+  PENDING
+  FAILED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  CRYPTO
+  PAYPAL
+  BALANCE
+}
+
+enum VolumeStatus {
+  AVAILABLE
+  ATTACHED
+  DETACHING
+  CREATING
+  DELETING
+  ERROR
+}
+
+enum ServerlessStatus {
+  ACTIVE
+  INACTIVE
+  SCALING
+  ERROR
+}
+
+enum MachineStatus {
+  ONLINE
+  OFFLINE
+  MAINTENANCE
+  SUSPENDED
+}
+
+enum GPUAllocation {
+  SINGLE
+  MULTI
+  FRACTIONAL
+}
+
+enum SortOrder {
+  ASC
+  DESC
+}
+
+enum InstanceSortField {
+  PRICE
+  GPU_COUNT
+  RAM
+  DISK
+  CREATED_AT
+  RELIABILITY
+}
+
+enum TemplateSortField {
+  NAME
+  CREATED_AT
+  UPDATED_AT
+  POPULARITY
+}
+
+enum TransactionType {
+  CHARGE
+  CREDIT
+  REFUND
+  PAYMENT
+  ADJUSTMENT
+}
+
+enum ContainerStatus {
+  RUNNING
+  STOPPED
+  PAUSED
+  RESTARTING
+  REMOVING
+  DEAD
+  CREATED
+  EXITED
+}
+
+enum NetworkProtocol {
+  TCP
+  UDP
+  HTTP
+  HTTPS
+}
+
+# ──────────────────────────────────────────────
+# Core entity types
+# ──────────────────────────────────────────────
+
+type GpuModel {
+  id: ID!
+  name: String!
+  memoryGb: Float!
+  memoryBandwidthGbps: Float
+  cudaCores: Int
+  tensorCores: Int
+  architectureName: String
+  vramType: String
+  tdpWatts: Int
+  releaseYear: Int
+  computeCapability: String
+}
+
+type Machine {
+  id: ID!
+  hostname: String!
+  status: MachineStatus!
+  gpuName: String!
+  gpuModel: GpuModel
+  numGpus: Int!
+  cpuName: String!
+  cpuCores: Int!
+  cpuRam: Float!
+  diskSpace: Float!
+  diskType: DiskType
+  internetUpMbps: Float
+  internetDownMbps: Float
+  internetType: InternetType
+  datacenter: String
+  country: String
+  city: String
+  latitude: Float
+  longitude: Float
+  reliability: Float
+  verification: String
+  driverVersion: String
+  cudaVersion: String
+  dockerVersion: String
+  hostingType: String
+  listed: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  offers: [Offer!]
+  currentInstances: [Instance!]
+}
+
+type Offer {
+  id: ID!
+  machineId: ID!
+  machine: Machine
+  offerType: OfferType!
+  gpuName: String!
+  numGpus: Int!
+  gpuFraction: Float
+  gpuAllocation: GPUAllocation
+  cpuCores: Int!
+  cpuRam: Float!
+  diskSpace: Float!
+  diskType: DiskType
+  dphBase: Float!
+  dphTotal: Float!
+  storageTotal: Float
+  internetUpMbps: Float
+  internetDownMbps: Float
+  reliability: Float
+  score: Float
+  hostname: String
+  country: String
+  datacenter: String
+  verified: Boolean
+  rentable: Boolean!
+  bundledResults: Int
+  bundleId: ID
+  cudaVersion: String
+  driverVersion: String
+  staticIp: Boolean
+  internalIp: String
+  externalIp: String
+  minBid: Float
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Instance {
+  id: ID!
+  machineId: ID!
+  machine: Machine
+  ownerId: ID!
+  offerId: ID
+  status: InstanceStatus!
+  instanceType: InstanceType!
+  gpuName: String!
+  numGpus: Int!
+  cpuCores: Int!
+  cpuRam: Float!
+  diskSpace: Float!
+  actualStatus: String
+  image: String!
+  imageHash: String
+  label: String
+  extraEnv: [EnvVar!]
+  ports: [PortMapping!]
+  sshPort: Int
+  sshHost: String
+  sshKeyIds: [ID!]
+  startDate: DateTime
+  endDate: DateTime
+  dphBase: Float!
+  dphTotal: Float!
+  totalCost: Float
+  curState: String
+  nextState: String
+  hostname: String
+  country: String
+  datacenter: String
+  startupScript: String
+  jupyterToken: String
+  directPortsStart: Int
+  directPortsEnd: Int
+  volumes: [VolumeAttachment!]
+  logs: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type EnvVar {
+  key: String!
+  value: String!
+}
+
+type PortMapping {
+  internal: Int!
+  external: Int!
+  protocol: NetworkProtocol!
+}
+
+type SshKey {
+  id: ID!
+  userId: ID!
+  name: String!
+  publicKey: String!
+  fingerprint: String
+  createdAt: DateTime!
+}
+
+type Template {
+  id: ID!
+  name: String!
+  description: String
+  image: String!
+  imageHash: String
+  label: String
+  extraEnv: [EnvVar!]
+  ports: [PortMapping!]
+  startupScript: String
+  jupyterEnabled: Boolean
+  sshEnabled: Boolean
+  runType: String
+  imageTag: String
+  repoName: String
+  isPublic: Boolean!
+  ownerId: ID!
+  usageCount: Int
+  tags: [String!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Volume {
+  id: ID!
+  name: String!
+  description: String
+  ownerId: ID!
+  sizeGb: Float!
+  status: VolumeStatus!
+  datacenter: String
+  country: String
+  attachedInstanceId: ID
+  mountPath: String
+  accessMode: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  attachments: [VolumeAttachment!]
+}
+
+type VolumeAttachment {
+  id: ID!
+  volumeId: ID!
+  volume: Volume
+  instanceId: ID!
+  instance: Instance
+  mountPath: String!
+  readOnly: Boolean!
+  attachedAt: DateTime!
+  detachedAt: DateTime
+}
+
+type ServerlessEndpoint {
+  id: ID!
+  name: String!
+  description: String
+  ownerId: ID!
+  status: ServerlessStatus!
+  image: String!
+  gpuName: String
+  numGpus: Int
+  minWorkers: Int!
+  maxWorkers: Int!
+  currentWorkers: Int
+  idleTimeout: Int
+  requestTimeout: Int
+  endpointUrl: String
+  apiKey: String
+  extraEnv: [EnvVar!]
+  concurrency: Int
+  coldStartTime: Int
+  totalRequests: BigInt
+  totalCost: Float
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  workers: [ServerlessWorker!]
+}
+
+type ServerlessWorker {
+  id: ID!
+  endpointId: ID!
+  instanceId: ID
+  status: InstanceStatus!
+  requestsHandled: BigInt
+  lastActiveAt: DateTime
+  createdAt: DateTime!
+}
+
+type User {
+  id: ID!
+  username: String!
+  email: String!
+  fullName: String
+  verified: Boolean!
+  balance: Float!
+  creditBalance: Float
+  apiKey: String
+  creditLimit: Float
+  autoRechargeEnabled: Boolean
+  autoRechargeThreshold: Float
+  autoRechargeAmount: Float
+  twoFactorEnabled: Boolean
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  sshKeys: [SshKey!]
+  instances: [Instance!]
+  machines: [Machine!]
+  volumes: [Volume!]
+  serverlessEndpoints: [ServerlessEndpoint!]
+}
+
+type BillingRecord {
+  id: ID!
+  userId: ID!
+  type: TransactionType!
+  amount: Float!
+  currency: String!
+  status: BillingStatus!
+  description: String
+  instanceId: ID
+  machineId: ID
+  paymentMethod: PaymentMethod
+  receiptUrl: String
+  invoiceId: String
+  periodStart: DateTime
+  periodEnd: DateTime
+  metadata: JSON
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Invoice {
+  id: ID!
+  userId: ID!
+  amount: Float!
+  currency: String!
+  status: BillingStatus!
+  lineItems: [InvoiceLineItem!]!
+  issueDate: DateTime!
+  dueDate: DateTime
+  paidAt: DateTime
+  pdfUrl: String
+  createdAt: DateTime!
+}
+
+type InvoiceLineItem {
+  id: ID!
+  invoiceId: ID!
+  description: String!
+  quantity: Float!
+  unitPrice: Float!
+  amount: Float!
+  instanceId: ID
+  periodStart: DateTime
+  periodEnd: DateTime
+}
+
+type ApiKey {
+  id: ID!
+  userId: ID!
+  name: String!
+  keyPrefix: String!
+  permissions: [String!]!
+  lastUsedAt: DateTime
+  expiresAt: DateTime
+  createdAt: DateTime!
+}
+
+type Datacenter {
+  id: ID!
+  name: String!
+  country: String!
+  city: String
+  region: String
+  latitude: Float
+  longitude: Float
+  verified: Boolean!
+  internetUpMbps: Float
+  internetDownMbps: Float
+  availability: Float
+  machineCount: Int
+  gpuCount: Int
+}
+
+type SpotPriceHistory {
+  gpuName: String!
+  timestamp: DateTime!
+  minPrice: Float!
+  maxPrice: Float!
+  avgPrice: Float!
+  offerCount: Int!
+}
+
+type UsageMetrics {
+  instanceId: ID!
+  gpuUtilization: Float
+  gpuMemoryUsed: Float
+  gpuMemoryTotal: Float
+  cpuUtilization: Float
+  ramUsed: Float
+  ramTotal: Float
+  diskRead: Float
+  diskWrite: Float
+  networkIn: Float
+  networkOut: Float
+  timestamp: DateTime!
+}
+
+# ──────────────────────────────────────────────
+# Connection / Pagination types
+# ──────────────────────────────────────────────
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+  totalCount: Int!
+}
+
+type OfferEdge {
+  cursor: String!
+  node: Offer!
+}
+
+type OfferConnection {
+  edges: [OfferEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type InstanceEdge {
+  cursor: String!
+  node: Instance!
+}
+
+type InstanceConnection {
+  edges: [InstanceEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type MachineEdge {
+  cursor: String!
+  node: Machine!
+}
+
+type MachineConnection {
+  edges: [MachineEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type TemplateEdge {
+  cursor: String!
+  node: Template!
+}
+
+type TemplateConnection {
+  edges: [TemplateEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type VolumeEdge {
+  cursor: String!
+  node: Volume!
+}
+
+type VolumeConnection {
+  edges: [VolumeEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type BillingEdge {
+  cursor: String!
+  node: BillingRecord!
+}
+
+type BillingConnection {
+  edges: [BillingEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type ServerlessEdge {
+  cursor: String!
+  node: ServerlessEndpoint!
+}
+
+type ServerlessConnection {
+  edges: [ServerlessEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+# ──────────────────────────────────────────────
+# Input types
+# ──────────────────────────────────────────────
+
+input OfferSearchInput {
+  gpuName: String
+  minGpus: Int
+  maxGpus: Int
+  minGpuMemoryGb: Float
+  maxGpuMemoryGb: Float
+  minCpuCores: Int
+  maxCpuCores: Int
+  minRamGb: Float
+  maxRamGb: Float
+  minDiskGb: Float
+  maxDiskGb: Float
+  minInternetUpMbps: Float
+  minInternetDownMbps: Float
+  maxDphBase: Float
+  minDphBase: Float
+  offerType: OfferType
+  country: [String!]
+  datacenter: String
+  verified: Boolean
+  rentable: Boolean
+  cudaVersionMin: String
+  instanceType: InstanceType
+  sortBy: InstanceSortField
+  sortOrder: SortOrder
+  first: Int
+  after: String
+}
+
+input CreateInstanceInput {
+  offerId: ID!
+  image: String!
+  label: String
+  extraEnv: [EnvVarInput!]
+  ports: [PortMappingInput!]
+  sshKeyIds: [ID!]
+  startupScript: String
+  jupyterEnabled: Boolean
+  sshEnabled: Boolean
+  templateId: ID
+  volumeId: ID
+  volumeMountPath: String
+  diskSpace: Float
+  instanceType: InstanceType
+  bid: Float
+}
+
+input UpdateInstanceInput {
+  label: String
+  extraEnv: [EnvVarInput!]
+  startupScript: String
+  jupyterEnabled: Boolean
+}
+
+input EnvVarInput {
+  key: String!
+  value: String!
+}
+
+input PortMappingInput {
+  internal: Int!
+  external: Int
+  protocol: NetworkProtocol
+}
+
+input CreateTemplateInput {
+  name: String!
+  description: String
+  image: String!
+  label: String
+  extraEnv: [EnvVarInput!]
+  ports: [PortMappingInput!]
+  startupScript: String
+  jupyterEnabled: Boolean
+  sshEnabled: Boolean
+  isPublic: Boolean
+  tags: [String!]
+}
+
+input UpdateTemplateInput {
+  name: String
+  description: String
+  image: String
+  label: String
+  extraEnv: [EnvVarInput!]
+  ports: [PortMappingInput!]
+  startupScript: String
+  jupyterEnabled: Boolean
+  sshEnabled: Boolean
+  isPublic: Boolean
+  tags: [String!]
+}
+
+input CreateVolumeInput {
+  name: String!
+  description: String
+  sizeGb: Float!
+  datacenter: String
+  country: String
+}
+
+input AttachVolumeInput {
+  volumeId: ID!
+  instanceId: ID!
+  mountPath: String!
+  readOnly: Boolean
+}
+
+input CreateSshKeyInput {
+  name: String!
+  publicKey: String!
+}
+
+input CreateServerlessEndpointInput {
+  name: String!
+  description: String
+  image: String!
+  gpuName: String
+  numGpus: Int
+  minWorkers: Int!
+  maxWorkers: Int!
+  idleTimeout: Int
+  requestTimeout: Int
+  extraEnv: [EnvVarInput!]
+  concurrency: Int
+}
+
+input UpdateServerlessEndpointInput {
+  name: String
+  description: String
+  image: String
+  minWorkers: Int
+  maxWorkers: Int
+  idleTimeout: Int
+  requestTimeout: Int
+  extraEnv: [EnvVarInput!]
+  concurrency: Int
+}
+
+input CreateMachineListingInput {
+  gpuName: String!
+  numGpus: Int!
+  cpuCores: Int!
+  cpuRam: Float!
+  diskSpace: Float!
+  diskType: DiskType
+  internetUpMbps: Float!
+  internetDownMbps: Float!
+  country: String!
+  datacenter: String
+  dphBase: Float!
+  listed: Boolean
+}
+
+input UpdateMachineListingInput {
+  dphBase: Float
+  listed: Boolean
+  diskSpace: Float
+}
+
+input BillingFilterInput {
+  type: TransactionType
+  status: BillingStatus
+  fromDate: DateTime
+  toDate: DateTime
+  instanceId: ID
+  first: Int
+  after: String
+}
+
+input InstanceFilterInput {
+  status: [InstanceStatus!]
+  instanceType: InstanceType
+  gpuName: String
+  label: String
+  first: Int
+  after: String
+}
+
+input AddBalanceInput {
+  amount: Float!
+  paymentMethod: PaymentMethod!
+  paymentToken: String!
+  currency: String
+}
+
+input AutoRechargeSettingsInput {
+  enabled: Boolean!
+  threshold: Float
+  amount: Float
+  paymentMethod: PaymentMethod
+}
+
+input SpotBidInput {
+  instanceId: ID!
+  newBid: Float!
+}
+
+input InstanceLogsInput {
+  instanceId: ID!
+  tail: Int
+  since: DateTime
+}
+
+# ──────────────────────────────────────────────
+# Payload / Result types
+# ──────────────────────────────────────────────
+
+type InstanceActionPayload {
+  success: Boolean!
+  instance: Instance
+  message: String
+  errors: [String!]
+}
+
+type VolumeActionPayload {
+  success: Boolean!
+  volume: Volume
+  attachment: VolumeAttachment
+  message: String
+  errors: [String!]
+}
+
+type ServerlessActionPayload {
+  success: Boolean!
+  endpoint: ServerlessEndpoint
+  message: String
+  errors: [String!]
+}
+
+type MachineActionPayload {
+  success: Boolean!
+  machine: Machine
+  message: String
+  errors: [String!]
+}
+
+type DeletePayload {
+  success: Boolean!
+  id: ID!
+  message: String
+  errors: [String!]
+}
+
+type BillingActionPayload {
+  success: Boolean!
+  record: BillingRecord
+  newBalance: Float
+  message: String
+  errors: [String!]
+}
+
+type LogsPayload {
+  instanceId: ID!
+  logs: String!
+  timestamp: DateTime!
+}
+
+type MarketSummary {
+  gpuName: String!
+  availableOffers: Int!
+  minPricePerHour: Float!
+  maxPricePerHour: Float!
+  avgPricePerHour: Float!
+  spotMinPrice: Float
+  spotAvgPrice: Float
+  totalGpuCount: Int!
+}
+
+# ──────────────────────────────────────────────
+# Query root
+# ──────────────────────────────────────────────
+
+type Query {
+  "Fetch the authenticated user's profile"
+  me: User
+
+  "Search available GPU offers on the marketplace"
+  searchOffers(input: OfferSearchInput!): OfferConnection!
+
+  "Get a single offer by ID"
+  offer(id: ID!): Offer
+
+  "List your running/stopped instances"
+  instances(filter: InstanceFilterInput): InstanceConnection!
+
+  "Get a single instance by ID"
+  instance(id: ID!): Instance
+
+  "Stream or fetch recent logs from an instance"
+  instanceLogs(input: InstanceLogsInput!): LogsPayload
+
+  "List all GPU models known to the marketplace"
+  gpuModels: [GpuModel!]!
+
+  "Get a specific GPU model"
+  gpuModel(name: String!): GpuModel
+
+  "List templates available to the user"
+  templates(
+    isPublic: Boolean
+    sortBy: TemplateSortField
+    sortOrder: SortOrder
+    first: Int
+    after: String
+  ): TemplateConnection!
+
+  "Get a single template by ID"
+  template(id: ID!): Template
+
+  "List volumes owned by the user"
+  volumes(status: VolumeStatus, first: Int, after: String): VolumeConnection!
+
+  "Get a single volume by ID"
+  volume(id: ID!): Volume
+
+  "List SSH keys registered to the account"
+  sshKeys: [SshKey!]!
+
+  "Get a single SSH key"
+  sshKey(id: ID!): SshKey
+
+  "List billing records"
+  billingRecords(filter: BillingFilterInput): BillingConnection!
+
+  "Get a single billing record"
+  billingRecord(id: ID!): BillingRecord
+
+  "List invoices"
+  invoices(first: Int, after: String): [Invoice!]!
+
+  "Get a single invoice"
+  invoice(id: ID!): Invoice
+
+  "List API keys for the authenticated user"
+  apiKeys: [ApiKey!]!
+
+  "List serverless endpoints"
+  serverlessEndpoints(
+    status: ServerlessStatus
+    first: Int
+    after: String
+  ): ServerlessConnection!
+
+  "Get a single serverless endpoint"
+  serverlessEndpoint(id: ID!): ServerlessEndpoint
+
+  "List machines the user hosts on the marketplace"
+  machines(status: MachineStatus, first: Int, after: String): MachineConnection!
+
+  "Get a single hosted machine"
+  machine(id: ID!): Machine
+
+  "List all known datacenters"
+  datacenters: [Datacenter!]!
+
+  "Get spot price history for a GPU type"
+  spotPriceHistory(
+    gpuName: String!
+    from: DateTime
+    to: DateTime
+  ): [SpotPriceHistory!]!
+
+  "Get a high-level market summary per GPU type"
+  marketSummary(gpuNames: [String!]): [MarketSummary!]!
+
+  "Get real-time usage metrics for an instance"
+  instanceMetrics(instanceId: ID!, from: DateTime, to: DateTime): [UsageMetrics!]!
+
+  "Estimate the cost of running an instance configuration"
+  estimateCost(offerId: ID!, durationHours: Float!): Float!
+}
+
+# ──────────────────────────────────────────────
+# Mutation root
+# ──────────────────────────────────────────────
+
+type Mutation {
+  "Rent a GPU instance from a marketplace offer"
+  createInstance(input: CreateInstanceInput!): InstanceActionPayload!
+
+  "Update labels or environment on a running instance"
+  updateInstance(id: ID!, input: UpdateInstanceInput!): InstanceActionPayload!
+
+  "Start a stopped instance"
+  startInstance(id: ID!): InstanceActionPayload!
+
+  "Stop a running instance"
+  stopInstance(id: ID!): InstanceActionPayload!
+
+  "Destroy an instance permanently"
+  destroyInstance(id: ID!): DeletePayload!
+
+  "Reboot an instance"
+  rebootInstance(id: ID!): InstanceActionPayload!
+
+  "Update the bid price for a spot/interruptible instance"
+  updateSpotBid(input: SpotBidInput!): InstanceActionPayload!
+
+  "Create a new instance template"
+  createTemplate(input: CreateTemplateInput!): Template!
+
+  "Update an existing template"
+  updateTemplate(id: ID!, input: UpdateTemplateInput!): Template!
+
+  "Delete a template"
+  deleteTemplate(id: ID!): DeletePayload!
+
+  "Create a persistent volume"
+  createVolume(input: CreateVolumeInput!): VolumeActionPayload!
+
+  "Attach a volume to an instance"
+  attachVolume(input: AttachVolumeInput!): VolumeActionPayload!
+
+  "Detach a volume from its instance"
+  detachVolume(volumeId: ID!): VolumeActionPayload!
+
+  "Delete a volume permanently"
+  deleteVolume(id: ID!): DeletePayload!
+
+  "Add an SSH public key"
+  createSshKey(input: CreateSshKeyInput!): SshKey!
+
+  "Delete an SSH key"
+  deleteSshKey(id: ID!): DeletePayload!
+
+  "Create a new serverless endpoint"
+  createServerlessEndpoint(input: CreateServerlessEndpointInput!): ServerlessActionPayload!
+
+  "Update a serverless endpoint configuration"
+  updateServerlessEndpoint(id: ID!, input: UpdateServerlessEndpointInput!): ServerlessActionPayload!
+
+  "Activate (deploy) a serverless endpoint"
+  activateServerlessEndpoint(id: ID!): ServerlessActionPayload!
+
+  "Deactivate a serverless endpoint"
+  deactivateServerlessEndpoint(id: ID!): ServerlessActionPayload!
+
+  "Delete a serverless endpoint"
+  deleteServerlessEndpoint(id: ID!): DeletePayload!
+
+  "List a machine on the marketplace"
+  createMachineListing(input: CreateMachineListingInput!): MachineActionPayload!
+
+  "Update a machine listing price or availability"
+  updateMachineListing(id: ID!, input: UpdateMachineListingInput!): MachineActionPayload!
+
+  "Remove a machine from marketplace listings"
+  deleteMachineListing(id: ID!): DeletePayload!
+
+  "Add balance/credits to the account"
+  addBalance(input: AddBalanceInput!): BillingActionPayload!
+
+  "Configure auto-recharge settings"
+  updateAutoRecharge(input: AutoRechargeSettingsInput!): User!
+
+  "Generate a new API key"
+  createApiKey(name: String!, permissions: [String!]): ApiKey!
+
+  "Revoke an API key"
+  deleteApiKey(id: ID!): DeletePayload!
+}
+
+# ──────────────────────────────────────────────
+# Subscription root
+# ──────────────────────────────────────────────
+
+type Subscription {
+  "Stream status updates for a specific instance"
+  instanceStatusChanged(instanceId: ID!): Instance!
+
+  "Stream log output from an instance in real time"
+  instanceLogs(instanceId: ID!): String!
+
+  "Get notified when a new GPU offer matching search criteria becomes available"
+  newOffer(input: OfferSearchInput!): Offer!
+
+  "Get notified when a spot bid is accepted or outbid"
+  spotBidUpdate(instanceId: ID!): InstanceActionPayload!
+
+  "Stream usage/telemetry metrics from a running instance"
+  instanceMetrics(instanceId: ID!): UsageMetrics!
+
+  "Get real-time serverless endpoint worker scaling events"
+  serverlessWorkerUpdate(endpointId: ID!): ServerlessWorker!
+
+  "Get notified when billing events occur (charges, credits, payments)"
+  billingEvent: BillingRecord!
+}
