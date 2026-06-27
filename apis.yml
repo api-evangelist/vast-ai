@@ -57,7 +57,7 @@ common:
   url: https://docs.vast.ai
 - type: Portal
   url: https://cloud.vast.ai
-- type: SignUp
+- type: Signup
   url: https://cloud.vast.ai/create
 - type: Login
   url: https://cloud.vast.ai/login
@@ -80,7 +80,7 @@ common:
   type: CLI
 - name: Vast.ai Python SDK
   url: https://github.com/vast-ai/vast-sdk
-  type: SDK
+  type: SDKs
 - name: Vast.ai Base Image
   url: https://github.com/vast-ai/base-image
   type: Samples
@@ -122,7 +122,7 @@ common:
     description: Bring-your-own Docker image support across all rental instances.
   - name: SSH
     description: Direct SSH access to rented instances for development and orchestration.
-- type: LLMsTxt
+- type: LlmsText
   url: https://docs.vast.ai/llms.txt
 maintainers:
 - FN: Kin Lane
