@@ -1,0 +1,30 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/vast-ai-openapi.json
+summary:
+  types:
+  - apiKey
+  - http
+  api_key_in:
+  - header
+  - query
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  description: API key authentication
+  sources:
+  - openapi/vast-ai-openapi.json
+- name: apiKeyAuth
+  type: apiKey
+  in: header
+  parameter: Authorization
+  sources:
+  - openapi/vast-ai-openapi.json
+- name: ApiKeyAuth
+  type: apiKey
+  in: query
+  parameter: api_key
+  description: API key must be provided as a query parameter
+  sources:
+  - openapi/vast-ai-openapi.json

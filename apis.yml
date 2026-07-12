@@ -49,6 +49,12 @@ apis:
   - url: graphql/vast-ai-graphql.md
     type: GraphQL
 common:
+- type: TrustCenter
+  url: security/vast-ai-trust-center.yml
+- type: DomainSecurity
+  url: security/vast-ai-domain-security.yml
+- type: Authentication
+  url: authentication/vast-ai-authentication.yml
 - type: Website
   url: https://vast.ai
 - type: Developer

@@ -1,0 +1,20 @@
+generated: '2026-07-11'
+method: searched
+probe: true
+source: https://vast.ai/compliance
+url: https://vast.ai/compliance
+certifications:
+- SOC 2
+- ISO 27001
+- PCI DSS
+- HIPAA
+- GDPR
+evidence:
+- source: https://vast.ai/compliance
+  keywords:
+  - soc 2
+  - iso 27001
+  - pci dss
+  - hipaa
+  - compliance certification
+  - gdpr
