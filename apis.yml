@@ -49,6 +49,8 @@ apis:
   - url: graphql/vast-ai-graphql.md
     type: GraphQL
 common:
+- type: AgenticAccess
+  url: agentic-access/vast-ai-agentic-access.yml
 - type: TrustCenter
   url: security/vast-ai-trust-center.yml
 - type: DomainSecurity
