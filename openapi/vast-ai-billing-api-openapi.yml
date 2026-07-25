@@ -1,0 +1,480 @@
+openapi: 3.1.0
+info:
+  title: Vast.ai Accounts Billing API
+  description: API for managing cloud GPU instances, volumes, and resources on Vast.ai
+  version: 1.0.0
+  contact:
+    name: Vast.ai Support
+    url: https://discord.gg/hSuEbSQ4X8
+servers:
+- url: https://console.vast.ai
+  description: Production API server
+security:
+- bearerAuth: []
+tags:
+- name: Billing
+paths:
+  /api/v0/invoices:
+    get:
+      summary: search invoices
+      description: 'This endpoint allows users to search and retrieve invoices based on specified filters.
+
+
+        CLI Usage: vast-ai search invoices'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: select_filters
+        in: query
+        required: false
+        schema:
+          type: object
+        description: Filters to apply to the invoice selection.
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Type of invoices to retrieve (e.g., charge).
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    type:
+                      type: string
+                      example: charge
+                    description:
+                      type: string
+                      example: 'Instance 123 GPU charge: hours * $/hr'
+                    timestamp:
+                      type: integer
+                      example: 1633036800
+                    quantity:
+                      type: string
+                      example: '10.000'
+                    rate:
+                      type: string
+                      example: '0.1000'
+                    amount:
+                      type: string
+                      example: '1.000'
+                    instance_id:
+                      type: integer
+                      example: 123
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=3.0
+      tags:
+      - Billing
+  /api/v0/instances/balance/{id}/:
+    get:
+      summary: show deposit
+      description: 'Retrieves the deposit details for a specified instance.
+
+
+        CLI Usage: vast show deposit {ID}'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: The ID of the instance.
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  refundable_deposit:
+                    type: number
+                    description: The refundable deposit amount.
+                    example: 100.0
+                  total_discount:
+                    type: number
+                    description: The total discount applied.
+                    example: 10.0
+                  discount_months:
+                    type: integer
+                    description: The number of months the discount applies.
+                    example: 3
+        '404':
+          description: Instance Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=3.0
+      tags:
+      - Billing
+  /api/v0/users/{user_id}/machine-earnings/:
+    get:
+      summary: show earnings
+      description: 'Retrieves the earnings history for a specified time range and optionally per machine.
+
+
+        CLI Usage: vastai show earnings [OPTIONS]'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: The ID of the user.
+      - name: sday
+        in: query
+        schema:
+          type: integer
+        description: Start day for the earnings report.
+      - name: eday
+        in: query
+        schema:
+          type: integer
+        description: End day for the earnings report.
+      - name: machid
+        in: query
+        schema:
+          type: integer
+        description: Optional machine ID to filter earnings.
+      - name: last_days
+        in: query
+        schema:
+          type: integer
+        description: Number of days to look back from today.
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  summary:
+                    type: object
+                    properties:
+                      total_gpu:
+                        type: number
+                      total_stor:
+                        type: number
+                      total_bwu:
+                        type: number
+                      total_bwd:
+                        type: number
+                  username:
+                    type: string
+                  email:
+                    type: string
+                  fullname:
+                    type: string
+                  address1:
+                    type: string
+                  address2:
+                    type: string
+                  city:
+                    type: string
+                  zip:
+                    type: string
+                  country:
+                    type: string
+                  taxinfo:
+                    type: string
+                  current:
+                    type: object
+                    properties:
+                      balance:
+                        type: number
+                      service_fee:
+                        type: number
+                      total:
+                        type: number
+                      credit:
+                        type: number
+                  per_machine:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        machine_id:
+                          type: integer
+                        gpu_earn:
+                          type: number
+                        sto_earn:
+                          type: number
+                        bwu_earn:
+                          type: number
+                        bwd_earn:
+                          type: number
+                  per_day:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        day:
+                          type: integer
+                        gpu_earn:
+                          type: number
+                        sto_earn:
+                          type: number
+                        bwu_earn:
+                          type: number
+                        bwd_earn:
+                          type: number
+        '400':
+          description: Bad Request - Invalid input syntax
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=2.0
+      tags:
+      - Billing
+  /api/v0/users/{user_id}/invoices/:
+    get:
+      summary: show invoices
+      description: 'This endpoint retrieves billing history reports for the authenticated user, including charges and credits.
+
+
+        CLI Usage: vast-ai show invoices'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The ID of the user whose invoices are being retrieved.
+        example: me
+      - name: inc_charges
+        in: query
+        required: false
+        schema:
+          type: boolean
+        description: Include charge items in the report.
+        example: true
+      - name: only_payouts
+        in: query
+        required: false
+        schema:
+          type: boolean
+        description: Show only payout items.
+        example: false
+      - name: no_payouts
+        in: query
+        required: false
+        schema:
+          type: boolean
+        description: Exclude payout items.
+        example: false
+      - name: sdate
+        in: query
+        required: false
+        schema:
+          type: string
+        description: Start date and time for the report.
+        example: '2023-01-01T00:00:00Z'
+      - name: edate
+        in: query
+        required: false
+        schema:
+          type: string
+        description: End date and time for the report.
+        example: '2023-12-31T23:59:59Z'
+      responses:
+        '200':
+          description: Success response with billing history reports
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invoices:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 123
+                        type:
+                          type: string
+                          example: payment
+                        service:
+                          type: string
+                          example: stripe
+                        amount:
+                          type: number
+                          format: float
+                          example: 100.0
+                        timestamp:
+                          type: integer
+                          example: 1672531199
+                  username:
+                    type: string
+                    example: user@example.com
+                  bill_to:
+                    type: string
+                    example: 'John Doe
+
+                      123 Main St
+
+                      City, ZIP
+
+                      Country'
+                  email:
+                    type: string
+                    example: user@example.com
+                  fullname:
+                    type: string
+                    example: John Doe
+                  address1:
+                    type: string
+                    example: 123 Main St
+                  address2:
+                    type: string
+                    example: Apt 4B
+                  city:
+                    type: string
+                    example: City
+                  zip:
+                    type: string
+                    example: '12345'
+                  country:
+                    type: string
+                    example: Country
+                  taxinfo:
+                    type: string
+                    example: Tax Info
+                  current:
+                    type: object
+                    properties:
+                      charges:
+                        type: number
+                        format: float
+                        example: 150.0
+                      service_fee:
+                        type: number
+                        format: float
+                        example: 15.0
+                      total:
+                        type: number
+                        format: float
+                        example: 165.0
+                      credit:
+                        type: number
+                        format: float
+                        example: 50.0
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=2.0
+      tags:
+      - Billing
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+        msg:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API key authentication
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+      description: API key must be provided as a query parameter

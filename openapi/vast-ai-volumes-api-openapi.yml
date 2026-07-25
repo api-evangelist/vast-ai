@@ -1,0 +1,512 @@
+openapi: 3.1.0
+info:
+  title: Vast.ai Accounts Volumes API
+  description: API for managing cloud GPU instances, volumes, and resources on Vast.ai
+  version: 1.0.0
+  contact:
+    name: Vast.ai Support
+    url: https://discord.gg/hSuEbSQ4X8
+servers:
+- url: https://console.vast.ai
+  description: Production API server
+security:
+- bearerAuth: []
+tags:
+- name: Volumes
+paths:
+  /api/v0/volumes:
+    delete:
+      summary: delete volume
+      description: 'Delete a volume by its ID. CLI Usage: vastai delete volume VOLUME_ID'
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - id
+              properties:
+                id:
+                  type: integer
+                  description: ID of the volume to delete
+                  example: 100
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    enum:
+                    - invalid_args
+                  msg:
+                    type: string
+                    example: Please provide a valid volume ID.
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    enum:
+                    - no_such_volume
+                  msg:
+                    type: string
+                    example: Volume with that ID does not exist.
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=5.5
+      tags:
+      - Volumes
+  /api/v0/volumes/:
+    put:
+      summary: rent volume
+      description: 'Rent/create a new volume with specified parameters. CLI Usage: vastai create volume ID --size SIZE_GB'
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - id
+              properties:
+                id:
+                  type: integer
+                  description: ID for the volume
+                  example: 420
+                size:
+                  type: integer
+                  description: Size in GB (Defaults to 15)
+                  example: 15
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  volume_name:
+                    type: string
+                    description: Name of the created/resized volume
+                    example: V.20118481
+      tags:
+      - Volumes
+    get:
+      summary: list volumes
+      description: 'Retrieve information about all volumes rented by you. CLI Usage: vastai show volumes'
+      security:
+      - BearerAuth: []
+      parameters: []
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  volumes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Volume'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: Authentication credentials were not provided.
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=5.5
+      tags:
+      - Volumes
+  /api/v0/volumes/search/:
+    post:
+      summary: search volumes
+      description: 'Search for available volumes based on specified criteria. CLI Usage: vastai search volumes <query> [OPTIONS]'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: q
+        in: query
+        required: false
+        schema:
+          type: object
+          properties:
+            limit:
+              type: integer
+              description: Maximum number of results to return
+              default: 64
+              example: 100
+        description: Query parameters for filtering volume search results
+        example:
+          limit: 100
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                limit:
+                  type: integer
+                  description: Maximum number of results to return
+                  default: 64
+                  example: 100
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  offers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VolumeOffer'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    enum:
+                    - invalid_args
+                    - invalid_request
+                  msg:
+                    type: string
+                    example: 'Invalid query: {query}, must be dict of conditions'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=5.5
+      tags:
+      - Volumes
+  /api/v0/volumes/unlist:
+    post:
+      summary: unlist volume
+      description: 'Remove a volume listing from the marketplace. CLI Usage: vastai unlist volume VOLUME_ID'
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - id
+              properties:
+                id:
+                  type: integer
+                  description: ID of the volume listing to unlist
+                  example: 2029
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  msg:
+                    type: string
+                    description: Success message
+                    example: Unlisted Volume 2029.
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  msg:
+                    type: string
+                    enum:
+                    - You must pass in `id` in the body of the request
+                    - Volume listing does not exist
+                    - Unable to delete active volume listing
+                    - Unable to delete volume listing.
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=5.0
+      tags:
+      - Volumes
+components:
+  schemas:
+    VolumeOffer:
+      type: object
+      properties:
+        ask_contract_id:
+          type: integer
+          description: Contract ID for the ask
+        bundle_id:
+          type: integer
+          description: Bundle ID
+        cpu_arch:
+          type: string
+          description: CPU architecture
+          example: amd64
+        cpu_ghz:
+          type: number
+          description: CPU clock speed in GHz
+        cpu_name:
+          type: string
+          description: CPU model name
+          example: AMD EPYC 7K62 48-Core Processor
+        cuda_max_good:
+          type: number
+          description: Maximum CUDA version supported
+          example: 12.8
+        disk_bw:
+          type: number
+          description: Disk bandwidth
+        disk_name:
+          type: string
+          description: Disk model name
+          example: FIKWOT FN955 4TB
+        disk_space:
+          type: number
+          description: Available disk space in GB
+          example: 10.0
+        driver_vers:
+          type: string
+          description: Driver version (deprecated)
+        driver_version:
+          type: string
+          description: NVIDIA driver version
+          example: 570.124.04
+        duration:
+          type: number
+          description: Duration of the contract
+        end_date:
+          type: number
+          description: End date as Unix timestamp
+        external:
+          type: boolean
+          description: Whether the volume is external
+        geolocation:
+          type: string
+          description: Geographic location
+        geolocode:
+          type: string
+          description: Geographic location code
+        gpu_arch:
+          type: string
+          description: GPU architecture
+        host_id:
+          type: integer
+          description: Host ID
+          example: 166946
+        id:
+          type: integer
+          description: Unique identifier for the volume offer
+        inet_down:
+          type: number
+          description: Download internet speed in Mbps
+          example: 654.6
+        inet_up:
+          type: number
+          description: Upload internet speed in Mbps
+          example: 78.9
+        machine_id:
+          type: integer
+          description: Machine ID
+          example: 36683
+        mobo_name:
+          type: string
+          description: Motherboard model name
+          example: ROME2D32GM-2T
+        reliability:
+          type: number
+          description: Reliability score
+        reliability2:
+          type: number
+          description: Alternative reliability score
+          example: 0.9649497
+        reliability_mult:
+          type: number
+          description: Reliability multiplier
+        start_date:
+          type: number
+          description: Start date as Unix timestamp
+          example: 1747341046.4320989
+        static_ip:
+          type: boolean
+          description: Whether the machine has a static IP
+          example: true
+        storage_cost:
+          type: number
+          description: Storage cost
+        storage_total_cost:
+          type: number
+          description: Total storage cost
+          example: 0.0005555555555555557
+        vericode:
+          type: string
+          description: Verification code
+        verification:
+          type: string
+          description: Verification status
+          example: verified
+        vms_enabled:
+          type: boolean
+          description: Whether VMs are enabled
+    Volume:
+      type: object
+      properties:
+        instances:
+          type: array
+          description: List of instances using this volume
+          items:
+            type: object
+        driver_version:
+          type: string
+          description: NVIDIA driver version
+        cuda_max_good:
+          type: number
+          description: Maximum CUDA version supported
+        machine_id:
+          type: integer
+          description: Unique identifier for the machine
+        public_ipaddr:
+          type: string
+          description: Public IP address
+        reliability2:
+          type: number
+          description: Reliability score of the host
+        host_id:
+          type: integer
+          description: Unique identifier for the host
+        cpu_name:
+          type: string
+          description: Name/model of the CPU
+        mobo_name:
+          type: string
+          description: Name/model of the motherboard
+        disk_space:
+          type: number
+          description: Disk space in GB
+        disk_name:
+          type: string
+          description: Name/model of the disk
+        inet_up:
+          type: number
+          description: Upload internet speed in Mbps
+        inet_down:
+          type: number
+          description: Download internet speed in Mbps
+        storage_total_cost:
+          type: number
+          description: Total cost for storage
+        os_version:
+          type: string
+          description: Operating system version
+        verification:
+          type: string
+          description: Verification status
+        static_ip:
+          type: boolean
+          description: Whether the machine has a static IP
+        cpu_arch:
+          type: string
+          description: CPU architecture
+        start_date:
+          type: number
+          description: Start date as Unix timestamp
+        id:
+          type: integer
+          description: Unique identifier for the volume
+        status:
+          type: string
+          description: Current status of the volume
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API key authentication
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+      description: API key must be provided as a query parameter

@@ -1,0 +1,1531 @@
+openapi: 3.1.0
+info:
+  title: Vast.ai Accounts API
+  description: API for managing cloud GPU instances, volumes, and resources on Vast.ai
+  version: 1.0.0
+  contact:
+    name: Vast.ai Support
+    url: https://discord.gg/hSuEbSQ4X8
+servers:
+- url: https://console.vast.ai
+  description: Production API server
+security:
+- bearerAuth: []
+tags:
+- name: Accounts
+paths:
+  /api/v0/auth/apikeys/:
+    post:
+      summary: create api-key
+      description: 'Creates a new API key with specified permissions for the authenticated user.
+
+
+        CLI Usage: vast create api-key --name NAME --permission_file PERMISSIONS [--key_params PARAMS]
+
+
+        Example:
+
+        vast create api-key --name "read-only" --permission_file permissions.json'
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              properties:
+                name:
+                  type: string
+                  description: Name for the API key
+                  example: read-only-key
+                permissions:
+                  type: object
+                  description: JSON object containing permission definitions
+                  example:
+                    read: true
+                    write: false
+                key_params:
+                  type: object
+                  description: Optional wildcard parameters for advanced keys
+                  example:
+                    ip_whitelist:
+                    - 1.2.3.4
+      responses:
+        '200':
+          description: API key created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The ID of the created API key
+                    example: 12345
+                  key:
+                    type: string
+                    description: The newly generated API key
+                    example: vast-123456789abcdef
+                  permissions:
+                    anyOf:
+                    - type: boolean
+                      description: False when permissions are disabled
+                      example: false
+                    - type: object
+                      description: Object defining the permissions when enabled
+                      example:
+                        read: true
+                        write: false
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    enum:
+                    - invalid_permissions
+                    - missing_permissions
+                  msg:
+                    type: string
+                    example: Invalid permission format
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  msg:
+                    type: string
+                    example: Unauthorized
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=2.0
+      tags:
+      - Accounts
+    get:
+      summary: show api keys
+      description: 'Retrieves all API keys associated with the authenticated user.
+
+
+        CLI Usage: vastai show api-keys'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: API keys successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  apikeys:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 123
+                        user_id:
+                          type: integer
+                          example: 456
+                        key:
+                          type: string
+                          example: your-api-key-value
+                        rights:
+                          type: string
+                          example: read
+                        team_id:
+                          type: integer
+                          example: 789
+                        team_name:
+                          type: string
+                          example: Team Alpha
+        '400':
+          description: Bad Request - API Key not provided or not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: API Key not provided as bearer token.
+        '401':
+          description: Unauthorized - Invalid or missing authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=1.0
+      tags:
+      - Accounts
+  /api/v0/secrets/:
+    post:
+      summary: create env-var
+      description: 'Creates a new encrypted environment variable for the authenticated user.
+
+        Keys are automatically converted to uppercase. Values are encrypted before storage.
+
+        There is a limit on the total number of environment variables per user.
+
+
+        CLI Usage: vast create env-var KEY VALUE'
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - key
+              - value
+              properties:
+                key:
+                  type: string
+                  description: Environment variable key name (will be converted to uppercase)
+                  example: API_TOKEN
+                value:
+                  type: string
+                  description: Secret value to be encrypted and stored
+                  pattern: ^[a-zA-Z0-9_\-\.]+$
+                  example: abc123xyz
+      responses:
+        '200':
+          description: Environment variable created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  msg:
+                    type: string
+                    example: Environment variable added successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    enum:
+                    - missing_input
+                    - max_secrets
+                    - existing_key
+                  msg:
+                    type: string
+                    example: Both 'key' and 'value' are required.
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - User is blacklisted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=3.0
+      tags:
+      - Accounts
+    delete:
+      summary: delete env var
+      description: 'Deletes an environment variable associated with the authenticated user.
+
+        The variable must exist and belong to the requesting user.
+
+
+        CLI Usage: vastai delete env-var <name>'
+      operationId: deleteUserSecret
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - key
+              properties:
+                key:
+                  type: string
+                  description: Name of the environment variable to delete
+                  example: MY_API_KEY
+      responses:
+        '200':
+          description: Environment variable deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad request - missing or invalid input
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    error:
+                      type: string
+                      enum:
+                      - missing_input
+                      - nonexistent_key
+                      example: missing_input
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - User is blacklisted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too many requests - rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=3.0
+      tags:
+      - Accounts
+    get:
+      summary: show env vars
+      description: 'Retrieve a list of environment variables (secrets) for the authenticated user.
+
+
+        CLI Usage: vast-ai show env-vars [-s]'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: Success response with user secrets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  secrets:
+                    type: object
+                    additionalProperties:
+                      type: string
+                      example: '*****'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=5.0
+      tags:
+      - Accounts
+    put:
+      summary: update env var
+      description: 'Updates the value of an existing environment variable for the authenticated user.
+
+
+        CLI Usage: vast-ai set env-var KEY VALUE'
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - key
+              - value
+              properties:
+                key:
+                  type: string
+                  description: The key of the environment variable to update (will be converted to uppercase)
+                  example: MY_API_KEY
+                  pattern: ^[a-zA-Z_]\w*$
+                value:
+                  type: string
+                  description: The new value for the environment variable
+                  example: xyz123
+      responses:
+        '200':
+          description: Environment variable updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  msg:
+                    type: string
+                    example: Environment variable updated successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                properties:
+                  error:
+                    type: string
+                    enum:
+                    - missing_input
+                    - empty_input
+                    - input_too_long
+                    - invalid_characters
+                    - nonexistent_key
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=3.0
+      tags:
+      - Accounts
+  /api/v0/ssh/:
+    post:
+      summary: create ssh-key
+      description: 'Creates a new SSH key and associates it with your account.
+
+        The key will be automatically added to all your current instances.
+
+
+        CLI Usage: vast create ssh-key <ssh_key>
+
+        Example: vast create ssh-key "ssh-rsa AAAAB3NzaC1..."'
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - ssh_key
+              properties:
+                ssh_key:
+                  type: string
+                  description: The public SSH key to add (from .pub file)
+                  example: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC...
+      responses:
+        '200':
+          description: SSH key created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  key:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: The ID of the created SSH key
+                        example: 123
+                      user_id:
+                        type: integer
+                        description: The user ID who owns the key
+                        example: 456
+                      public_key:
+                        type: string
+                        description: The public SSH key content
+                        example: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC...
+                      created_at:
+                        type: string
+                        format: date-time
+                        example: '2023-01-01T12:00:00Z'
+                      deleted_at:
+                        type: string
+                        format: date-time
+                        nullable: true
+                        example: null
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    enum:
+                    - no_ssh_key
+                  msg:
+                    type: string
+                    example: No ssh key provided
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=1.0
+      tags:
+      - Accounts
+    get:
+      summary: show ssh keys
+      description: Retrieve a list of SSH keys associated with the authenticated user's account.
+      operationId: getSshKeysUser
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        description: Bearer token for user authentication.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A list of SSH keys.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: The unique identifier of the SSH key.
+                    user_id:
+                      type: integer
+                      description: The ID of the user to whom the SSH key belongs.
+                    key:
+                      type: string
+                      description: The SSH public key.
+                    created_at:
+                      type: string
+                      format: date-time
+                      description: The timestamp when the SSH key was created.
+                    deleted_at:
+                      type: string
+                      format: date-time
+                      nullable: true
+                      description: The timestamp when the SSH key was deleted, if applicable.
+        '401':
+          description: Unauthorized access due to invalid or missing authentication token.
+        '404':
+          description: No SSH keys found for the user.
+      security:
+      - BearerAuth: []
+      tags:
+      - Accounts
+  /api/v0/users/:
+    post:
+      summary: create subaccount
+      description: 'Creates either a standalone user account or a subaccount under a parent account.
+
+        Subaccounts can be restricted to host-only functionality.
+
+
+        CLI Usage: vastai create subaccount --email EMAIL --username USERNAME --password PASSWORD --type host'
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              - username
+              - password
+              properties:
+                email:
+                  type: string
+                  description: User's email address
+                  maxLength: 64
+                  example: user@example.com
+                  pattern: ^(?!.*@vast)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
+                username:
+                  type: string
+                  description: Desired username
+                  maxLength: 64
+                  example: testuser123
+                password:
+                  type: string
+                  description: Account password
+                  maxLength: 256
+                  example: securepass123
+                host_only:
+                  type: boolean
+                  description: If true, account is restricted to host functionality only
+                  example: true
+                parent_id:
+                  type: string
+                  description: Parent account ID for subaccounts. Use "me" for current user.
+                  example: me
+                ssh_key:
+                  type: string
+                  description: Optional SSH public key
+                  maxLength: 4096
+                captcha:
+                  type: string
+                  description: Captcha token (required for non-subaccounts)
+                  maxLength: 8192
+      responses:
+        '200':
+          description: Account created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: User ID
+                  username:
+                    type: string
+                  email:
+                    type: string
+                  api_key:
+                    type: string
+                    description: API key for the new account
+                example:
+                  id: 12345
+                  username: testuser
+                  email: user@example.com
+                  api_key: abc123def456
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                    - invalid_email
+                    - invalid_request
+                    - missing_auth_value
+                  msg:
+                    type: string
+                example:
+                  error: invalid_email
+                  msg: Email address not allowed
+        '403':
+          description: Forbidden - billing blacklisted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: User already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    enum:
+                    - user_exists
+                  msg:
+                    type: string
+                example:
+                  error: user_exists
+                  msg: user already exists.
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=3.0
+      tags:
+      - Accounts
+    put:
+      summary: set user
+      description: 'Updates the user data for the authenticated user.
+
+
+        CLI Usage: vast set user --file {file_path}'
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                normalized_email:
+                  type: string
+                  description: Normalized email address.
+                  example: user@example.com
+                username:
+                  type: string
+                  description: Username of the user.
+                  example: johndoe
+                fullname:
+                  type: string
+                  description: Full name of the user.
+                  example: John Doe
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                properties:
+                  error:
+                    type: string
+                    enum:
+                    - missing_input
+                    - empty_input
+                    - input_too_long
+                    - invalid_characters
+                    - nonexistent_key
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=5.0
+      tags:
+      - Accounts
+  /api/v0/auth/apikeys/{id}/:
+    delete:
+      summary: delete api key
+      description: 'Deletes an existing API key belonging to the authenticated user.
+
+        The API key is soft-deleted by setting a deleted_at timestamp.
+
+
+        CLI Usage: vastai delete api-key ID'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the API key to delete
+        schema:
+          type: integer
+          minimum: 1
+        example: 123
+      responses:
+        '200':
+          description: API key successfully deleted
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Successfully Deleted API Key
+        '400':
+          description: Bad Request - API key ID not provided
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: API Key ID not provided.
+        '401':
+          description: Unauthorized - Invalid or missing authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - API key belongs to a different user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: You do not have permission to delete this API Key.
+        '404':
+          description: Not Found - API key does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: API Key not found.
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=2.0
+      tags:
+      - Accounts
+    get:
+      summary: show api key
+      description: 'Retrieves an existing API key belonging to the authenticated user.
+
+
+        CLI Usage: vastai show api-key ID'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the API key to retrieve
+        schema:
+          type: integer
+          minimum: 1
+        example: 123
+      responses:
+        '200':
+          description: API key successfully retrieved
+          content:
+            application/json:
+              schema:
+                type: string
+                example: your-api-key-value
+        '401':
+          description: Unauthorized - Invalid or missing authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - API key belongs to a different user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: You do not have permission to access this key.
+        '404':
+          description: Not Found - API key does not exist
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: API Key not found.
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=1.0
+      tags:
+      - Accounts
+  /api/v0/ssh/{id}/:
+    delete:
+      summary: delete ssh key
+      description: 'Removes an SSH key from the authenticated user''s account
+
+        CLI Usage: vastai delete ssh-key <id>`'
+      operationId: deleteSshKey
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the SSH key to delete
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: SSH key successfully deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                required:
+                - success
+              example:
+                success: true
+        '400':
+          description: Invalid request or SSH key not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: no_ssh_key
+                  msg:
+                    type: string
+                    example: No ssh key provided
+                required:
+                - success
+                - error
+                - msg
+              examples:
+                not_found:
+                  value:
+                    success: false
+                    error: no_ssh_key
+                    msg: No ssh key provided
+                invalid:
+                  value:
+                    success: false
+                    error: invalid_request
+                    msg: Invalid request parameters
+      tags:
+      - Accounts
+    put:
+      summary: update ssh key
+      description: 'Updates the specified SSH key with the provided value.
+
+
+        CLI Usage: vastai update ssh-key id ssh_key'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: ID of the SSH key to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - ssh_key
+              properties:
+                ssh_key:
+                  type: string
+                  description: The new value for the SSH key
+                  example: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC3...
+      responses:
+        '200':
+          description: SSH key updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  key:
+                    type: object
+                    description: The updated SSH key data
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=1.0
+      tags:
+      - Accounts
+  /api/v0/commands/reset_apikey/:
+    put:
+      summary: reset api key
+      description: 'Resets the API key for the authenticated user. This operation generates a new API key and invalidates the old one.
+
+
+        CLI Usage: vast-ai reset api-key'
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - client_id
+              properties:
+                client_id:
+                  type: string
+                  description: The ID of the client whose API key is being reset.
+                  example: me
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sent:
+                    type: boolean
+                    example: true
+                  key:
+                    type: string
+                    description: The new API key.
+                    example: new_api_key_value
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=3.0
+      tags:
+      - Accounts
+  /api/v0/users/cloud_integrations/:
+    get:
+      summary: show connections
+      description: 'Retrieves the list of cloud connections associated with the authenticated user.
+
+
+        CLI Usage: vastai show connections'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Unique identifier for the cloud connection.
+                    cloud_type:
+                      type: string
+                      description: Type of cloud service.
+                    name:
+                      type: string
+                      description: User-given name for the cloud connection.
+        '401':
+          description: Unauthorized - Invalid or missing authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=2.9
+      tags:
+      - Accounts
+  /api/v0/users/{user_id}/ipaddrs/:
+    get:
+      summary: show ipaddrs
+      description: 'This endpoint retrieves the history of IP address accesses for the authenticated user.
+
+
+        CLI Usage: vast-ai show ipaddrs'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The ID of the user whose IP address history is being retrieved.
+        example: me
+      responses:
+        '200':
+          description: Success response with IP address history
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 123
+                        user_id:
+                          type: integer
+                          example: 456
+                        ip_address:
+                          type: string
+                          example: 192.168.1.1
+                        timestamp:
+                          type: string
+                          format: date-time
+                          example: '2023-10-01T12:00:00Z'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=2.9
+      tags:
+      - Accounts
+  /api/v0/subaccounts/:
+    get:
+      summary: show subaccounts
+      description: 'Retrieve a list of subaccounts associated with the authenticated user''s account.
+
+
+        CLI Usage: vast-ai show subaccounts'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: A list of subaccounts.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The unique identifier of the subaccount.
+                        parent_id:
+                          type: integer
+                          description: The ID of the parent account.
+                        api_key:
+                          type: string
+                          description: The API key associated with the subaccount.
+                        created_at:
+                          type: string
+                          format: date-time
+                          description: The timestamp when the subaccount was created.
+                        deleted_at:
+                          type: string
+                          format: date-time
+                          nullable: true
+                          description: The timestamp when the subaccount was deleted, if applicable.
+        '401':
+          description: Unauthorized access due to invalid or missing authentication token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=2.1
+      tags:
+      - Accounts
+  /api/v0/team/roles/{id}/:
+    get:
+      summary: show team role
+      description: 'Retrieve details of a specific team role by its name.
+
+
+        CLI Usage: vastai show team-role NAME'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: Name of the team role
+        schema:
+          type: string
+        example: admin
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Role ID
+                    example: 1
+                  name:
+                    type: string
+                    description: Name of the role
+                    example: admin
+                  permissions:
+                    type: array
+                    description: Permissions associated with the role
+                    items:
+                      type: string
+                    example:
+                    - read
+                    - write
+        '404':
+          description: Role not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Accounts
+  /api/v0/users/current/:
+    get:
+      summary: show user
+      description: 'Retrieve information about the current authenticated user, excluding the API key.
+
+
+        CLI Usage: vastai show user'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: Success response with user information
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: The unique identifier of the user.
+                  email:
+                    type: string
+                    description: The email address of the user.
+                  balance:
+                    type: number
+                    format: float
+                    description: The current balance of the user.
+                  ssh_key:
+                    type: string
+                    description: The SSH key associated with the user.
+                  sid:
+                    type: string
+                    description: Server ID.
+        '401':
+          description: Unauthorized access due to invalid or missing authentication token.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Accounts
+  /api/v0/commands/transfer_credit/:
+    put:
+      summary: transfer credit
+      description: 'Transfers specified amount of credits from the authenticated user''s account to another user''s account.
+
+        The recipient can be specified by either email address or user ID.
+
+
+        CLI Usage: vast.py transfer credit <recipient_email> <amount>'
+      security:
+      - BearerAuth: []
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - recipient
+              - amount
+              properties:
+                recipient:
+                  type: string
+                  description: Email address or user ID of the recipient
+                  example: user@example.com
+                amount:
+                  type: number
+                  format: float
+                  description: Amount of credits to transfer (must be positive)
+                  minimum: 0.01
+                  example: 100.0
+                client_id:
+                  type: string
+                  description: Client identifier (usually "me")
+                  example: me
+                apikey_id:
+                  type: string
+                  description: Optional API key identifier for audit logging
+      responses:
+        '200':
+          description: Transfer completed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    enum:
+                    - invalid_args
+                    - invalid_params
+                    - invalid_recipient
+                    - insufficient_balance
+                  msg:
+                    type: string
+                    example: Invalid amount
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=2.5
+      tags:
+      - Accounts
+components:
+  schemas:
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        msg:
+          type: string
+          example: Operation completed successfully
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+        msg:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API key authentication
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+      description: API key must be provided as a query parameter

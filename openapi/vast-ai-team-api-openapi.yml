@@ -1,0 +1,697 @@
+openapi: 3.1.0
+info:
+  title: Vast.ai Accounts Team API
+  description: API for managing cloud GPU instances, volumes, and resources on Vast.ai
+  version: 1.0.0
+  contact:
+    name: Vast.ai Support
+    url: https://discord.gg/hSuEbSQ4X8
+servers:
+- url: https://console.vast.ai
+  description: Production API server
+security:
+- bearerAuth: []
+tags:
+- name: Team
+paths:
+  /api/v0/team:
+    post:
+      summary: create team
+      description: 'Creates a new team with the authenticated user as the owner. The user''s existing API key
+
+        becomes the owner key for the team. The user cannot already be a team or be a member of another team.
+
+
+        The operation:
+
+        1. Converts the user into a team
+
+        2. Creates default team roles (member, manager, owner)
+
+        3. Converts user''s API key into the owner key
+
+        4. Adds the creating user as a team member
+
+
+        CLI Usage: vast create team --name <team_name>'
+      security:
+      - BearerAuth: []
+      tags:
+      - Team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - team_name
+              - permissions
+              properties:
+                team_name:
+                  type: string
+                  description: Name for the new team
+                  example: my-awesome-team
+                permissions:
+                  type: object
+                  description: JSON object containing role and permission definitions. https://vast.ai/docs/cli/roles-and-permissions
+                  example:
+                    api:
+                      misc: {}
+                      user_read: {}
+                      instance_read: {}
+                      instance_write: {}
+                      billing_read: {}
+                      billing_write: {}
+      responses:
+        '200':
+          description: Team created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Team Successfully Created!
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    enum:
+                    - already_team
+                    - team_member
+                  msg:
+                    type: string
+                    example: Cannot create a team within a team
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - User is blacklisted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: User's master API key not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v0/team/role:
+    post:
+      summary: create team role
+      description: 'Creates a new role within a team. Only team owners or managers with the appropriate permissions can perform this operation.
+
+
+        CLI Usage: vast create team role --name <role_name> --permissions <permissions_json>'
+      security:
+      - BearerAuth: []
+      tags:
+      - Team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - name
+              - permissions
+              properties:
+                name:
+                  type: string
+                  description: Name for the new role
+                  example: developer
+                permissions:
+                  type: object
+                  description: JSON object containing permission definitions
+                  example:
+                    api:
+                      user_read: {}
+                      instance_write: {}
+      responses:
+        '200':
+          description: Role created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Role Successfully Created!
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: invalid_role_name
+                  msg:
+                    type: string
+                    example: Role name is invalid
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - User lacks permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/v0/team/:
+    delete:
+      summary: destroy team
+      description: 'Deletes a team and all associated data including API keys, rights, invitations,
+
+        memberships and metadata. The team owner''s master API key is converted to a normal client key.
+
+
+        CLI Usage: vast-ai destroy team'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: Team successfully deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Team Successfully Deleted!
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - User is blacklisted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found - Team does not exist
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Error'
+                - type: object
+                  properties:
+                    error:
+                      type: string
+                      enum:
+                      - no_such_user
+                    msg:
+                      type: string
+                      example: No such user.
+      tags:
+      - Team
+  /api/v0/team/invite/:
+    post:
+      summary: invite team member
+      description: 'Sends an invitation email to the specified user to join the team with the given role.
+
+
+        CLI Usage: vast-ai invite team-member --email EMAIL --role ROLE'
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - email
+              - role
+              properties:
+                email:
+                  type: string
+                  description: Email address of the user to invite
+                  format: email
+                  example: user@example.com
+                role:
+                  type: string
+                  description: Role to assign to the new team member
+                  example: developer
+                api_key:
+                  type: string
+                  description: API key of the inviting user
+                  example: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+      responses:
+        '200':
+          description: Invitation sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: New invitation sent to ${email}
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    enum:
+                    - User is a not a team member
+                    - User cannot be invited to their own team.
+                    - User is already a member of this team.
+        '403':
+          description: Forbidden - User not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Team metadata not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Team metadata not found
+        '429':
+          description: Too Many Requests - Duplicate invitation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: 'Error: invitation already sent to user@example.com only 300 seconds ago.'
+      tags:
+      - Team
+  /api/v0/team/members/{id}:
+    delete:
+      summary: remove team member
+      description: 'Removes a member from the team by revoking their team-related API keys and updating membership status.
+
+        Cannot remove the team owner.
+
+
+        CLI Usage: vast-ai remove team-member ID
+
+        Example: vast-ai remove team-member 12345'
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: User ID of the team member to remove
+        example: 12345
+      responses:
+        '200':
+          description: Member removed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                    - success
+                    example: success
+                  message:
+                    type: string
+                    example: User removed from the team.
+        '400':
+          description: Bad request - cannot remove team owner
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Cannot remove the team owner from the team
+        '401':
+          description: Unauthorized - invalid or missing API key
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: unauthorized
+                  msg:
+                    type: string
+                    example: Invalid or missing API key
+        '403':
+          description: Forbidden - user is blacklisted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: forbidden
+                  msg:
+                    type: string
+                    example: User is blacklisted
+        '404':
+          description: Member not found or already removed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                    - failure
+                    example: failure
+                  message:
+                    type: string
+                    example: No user was removed from the team.
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: rate_limit_exceeded
+                  msg:
+                    type: string
+                    example: API requests too frequent endpoint threshold=3.0
+      security:
+      - BearerAuth: []
+      tags:
+      - Team
+  /api/v0/team/roles/{id}:
+    delete:
+      summary: remove team role
+      description: 'Removes a role from the team. Cannot remove the team owner role.
+
+
+        CLI Usage: vast-ai remove team-role NAME
+
+        Example: vast-ai remove team-role developer'
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        description: Name of the role to remove
+        example: developer
+      responses:
+        '200':
+          description: Role removed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                    - success
+                    example: success
+                  message:
+                    type: string
+                    example: Role removed from team
+        '400':
+          description: Bad request - role name is required
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  msg:
+                    type: string
+                    example: Role name is required
+        '401':
+          description: Unauthorized - invalid or missing API key
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: unauthorized
+                  msg:
+                    type: string
+                    example: Invalid or missing API key
+        '403':
+          description: Forbidden - cannot delete owner role or user is blacklisted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: forbidden
+                  msg:
+                    type: string
+                    example: You cannot delete the owner role.
+        '404':
+          description: Role not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: not_found
+                  msg:
+                    type: string
+                    example: Specified role not found
+      security:
+      - BearerAuth: []
+      tags:
+      - Team
+  /api/v0/team/members/:
+    get:
+      summary: show team members
+      description: 'Retrieve a list of team members associated with the authenticated user''s team.
+
+
+        CLI Usage: vastai show team-members'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: User ID
+                      example: 123
+                    username:
+                      type: string
+                      description: Username of the team member
+                      example: johndoe
+                    email:
+                      type: string
+                      description: Email of the team member
+                      example: johndoe@example.com
+                    roles:
+                      type: array
+                      description: Roles assigned to the team member
+                      items:
+                        type: string
+                      example:
+                      - admin
+                      - member
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Team
+  /api/v0/team/roles/{id}/:
+    put:
+      summary: update team role
+      description: Update an existing team role with new name and permissions.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the role to update.
+        schema:
+          type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: New name for the role.
+                permissions:
+                  type: object
+                  description: JSON encoded permissions for the role.
+              required:
+              - name
+              - permissions
+      responses:
+        '200':
+          description: Successfully updated team role.
+          content:
+            application/json:
+              schema:
+                type: string
+                example: Successfully Updated Team Role For <role_name>
+        '400':
+          description: Bad Request - Missing or invalid parameters.
+        '403':
+          description: Forbidden - User does not have permission to update this role.
+        '404':
+          description: Not Found - API key not found.
+      security:
+      - BearerAuth: []
+      tags:
+      - Team
+  /api/v0/team/roles-full/:
+    get:
+      summary: show team roles
+      description: 'Retrieve a list of all roles for a team, excluding the ''team_owner'' role.
+
+
+        CLI Usage: vastai show team-roles'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: Role ID
+                      example: 1
+                    name:
+                      type: string
+                      description: Name of the role
+                      example: admin
+                    permissions:
+                      type: array
+                      description: Permissions associated with the role
+                      items:
+                        type: string
+                      example:
+                      - read
+                      - write
+                    identifier:
+                      type: string
+                      description: Unique identifier for the role
+                      example: admin_role
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Team
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+        msg:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API key authentication
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+      description: API key must be provided as a query parameter

@@ -1,0 +1,1784 @@
+openapi: 3.1.0
+info:
+  title: Vast.ai Accounts Instances API
+  description: API for managing cloud GPU instances, volumes, and resources on Vast.ai
+  version: 1.0.0
+  contact:
+    name: Vast.ai Support
+    url: https://discord.gg/hSuEbSQ4X8
+servers:
+- url: https://console.vast.ai
+  description: Production API server
+security:
+- bearerAuth: []
+tags:
+- name: Instances
+paths:
+  /api/v0/instances/{id}/ssh/:
+    post:
+      summary: attach ssh-key
+      description: 'Attaches an SSH key to the specified instance, allowing SSH access using the provided key.
+
+
+        CLI Usage: vast attach instance_id ssh_key'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: ID of the instance to attach the SSH key to
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ssh_key:
+                  type: string
+                  description: The SSH key to attach to the instance
+                  example: ssh-rsa AAAAB3NzaC1yc2EAAA...
+      responses:
+        '200':
+          description: SSH key attached successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  msg:
+                    type: string
+                    example: SSH key attached successfully
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Instances
+  /api/v0/commands/copy_direct/:
+    delete:
+      summary: cancel copy
+      description: Cancel a remote copy operation specified by the destination ID (dst_id).
+      operationId: cancelRemoteRsync
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dst_id:
+                  type: string
+                  description: ID of the copy instance target to cancel.
+              required:
+              - dst_id
+      responses:
+        '200':
+          description: Remote copy canceled successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: Invalid arguments provided.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: invalid_args
+                  msg:
+                    type: string
+                    example: Invalid dst_id.
+        '404':
+          description: Destination ID not found or access denied.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: no_such_user
+                  msg:
+                    type: string
+                    example: No such user.
+      security:
+      - BearerAuth: []
+      x-rateLimit: 3.5
+      tags:
+      - Instances
+    put:
+      summary: copy
+      description: Initiate a remote copy operation to transfer data from one instance to another or between an instance and the local machine.
+      operationId: initiateRemoteRsync
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                src_id:
+                  type: string
+                  description: ID of the source instance.
+                dst_id:
+                  type: string
+                  description: ID of the destination instance.
+                src_path:
+                  type: string
+                  description: Path of the source data.
+                dst_path:
+                  type: string
+                  description: Path of the destination data.
+              required:
+              - src_path
+              - dst_path
+      responses:
+        '200':
+          description: Remote copy initiated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  msg:
+                    type: string
+                    example: Remote to Remote copy initiated - check instance status bar for progress updates (~30 seconds delayed).
+        '400':
+          description: Invalid arguments provided.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: invalid_args
+                  msg:
+                    type: string
+                    example: Invalid src_path.
+        '404':
+          description: Source or destination ID not found or access denied.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: no_such_user
+                  msg:
+                    type: string
+                    example: No such user.
+      security:
+      - BearerAuth: []
+      x-rateLimit: 3.5
+      tags:
+      - Instances
+  /api/v0/commands/rclone/:
+    delete:
+      summary: cancel sync
+      description: 'Cancels an in-progress remote sync operation identified by the destination instance ID.
+
+        This operation cannot be resumed once canceled and must be restarted if needed.'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dst_id:
+                  type: integer
+                  description: The destination instance ID of the sync operation to cancel.
+              required:
+              - dst_id
+      responses:
+        '200':
+          description: Sync operation canceled successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  msg:
+                    type: string
+                    example: Remote copy canceled - check instance status bar for progress updates (~30 seconds delayed).
+        '400':
+          description: Invalid request due to missing or incorrect parameters.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: invalid_args
+                  msg:
+                    type: string
+                    example: Invalid dst_id.
+        '404':
+          description: Instance not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: no_such_instance
+                  msg:
+                    type: string
+                    example: No such instance.
+      tags:
+      - Instances
+    post:
+      summary: cloud copy
+      description: Starts a cloud copy operation by sending a command to the remote server. The operation can transfer data between an instance and a cloud service.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                instance_id:
+                  type: string
+                  description: ID of the instance.
+                src:
+                  type: string
+                  description: Source path for the copy operation.
+                dst:
+                  type: string
+                  description: Destination path for the copy operation.
+                selected:
+                  type: string
+                  description: ID of the cloud connection.
+                transfer:
+                  type: string
+                  description: Type of transfer (e.g., "Instance To Cloud" or "Cloud To Instance").
+                flags:
+                  type: array
+                  items:
+                    type: string
+                  description: Additional flags for the operation.
+                api_key:
+                  type: string
+                  description: API key for authentication.
+      responses:
+        '200':
+          description: Cloud copy operation initiated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  msg:
+                    type: string
+                  result_url:
+                    type: string
+        '400':
+          description: Bad request due to invalid parameters or cloud service.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  msg:
+                    type: string
+      security:
+      - BearerAuth: []
+      tags:
+      - Instances
+  /api/v0/instances/bid_price/{id}/:
+    put:
+      summary: change bid
+      description: 'Change the current bid price of an instance to a specified price.
+
+        CLI Usage: vastai change bid id [--price PRICE]'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: Instance ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - client_id
+              - price
+              properties:
+                client_id:
+                  type: string
+                  description: Client identifier (usually "me")
+                  example: me
+                price:
+                  type: number
+                  description: Bid price in $/hour
+                  minimum: 0.001
+                  maximum: 32.0
+                  example: 0.17
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    enum:
+                    - invalid_args
+                  msg:
+                    type: string
+                    example: Please set a bid price >= 0.001.
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    enum:
+                    - no_such_instance
+                  msg:
+                    type: string
+                    example: Instance with that ID does not exist.
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=5.5
+      tags:
+      - Instances
+  /api/v0/asks/{id}/:
+    put:
+      summary: create instance
+      description: 'Creates a new instance by accepting an "ask" contract from a provider. This is the main endpoint for launching new instances on Vast.ai.
+
+        CLI Usage: vast create instance <offer_id> [options]'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: ID of the offer to accept
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                template_id:
+                  type: integer
+                  description: Optional template ID to use for instance configuration
+                  example: 89
+                template_hash_id:
+                  type: string
+                  description: Optional template hash ID to use for instance configuration
+                  example: abc123def456
+                image:
+                  type: string
+                  description: Docker image to use for the instance
+                  example: tensorflow/tensorflow:latest-gpu
+                  maxLength: 1024
+                disk:
+                  type: number
+                  description: Storage space in GB
+                  minimum: 8.0
+                  default: 10.0
+                  example: 32.0
+                env:
+                  type: object
+                  description: Environment variables and port mappings
+                  example:
+                    JUPYTER_TOKEN: abc123
+                    PORTAL_CONFIG: '{"ports": [8080, 8081]}'
+                  maxLength: 256
+                runtype:
+                  type: string
+                  description: Instance run type
+                  enum:
+                  - ssh
+                  - jupyter
+                  - args
+                  - ssh_proxy
+                  - ssh_direct
+                  - jupyter_proxy
+                  - jupyter_direct
+                  example: jupyter
+                onstart:
+                  type: string
+                  description: Commands to run when instance starts
+                  maxLength: 4096
+                  example: pip install -r requirements.txt
+                label:
+                  type: string
+                  description: User-defined label for the instance
+                  maxLength: 256
+                  example: training-job-1
+                image_login:
+                  type: string
+                  description: Docker registry credentials if needed
+                  example: -u username -p password docker.io
+                price:
+                  type: number
+                  description: Bid price per hour for interruptible instances
+                  minimum: 0.001
+                  maximum: 128.0
+                  example: 0.4
+                target_state:
+                  type: string
+                  description: Desired initial state of the instance
+                  enum:
+                  - running
+                  - stopped
+                  default: running
+                  example: running
+                cancel_unavail:
+                  type: boolean
+                  description: Whether to cancel if instance cannot start immediately. Defaults to false for interruptibles, true for on-demand with target_state='running'
+                  example: true
+                vm:
+                  type: boolean
+                  description: Whether this is a VM instance
+                  default: false
+                client_id:
+                  type: string
+                  description: Client identifier (usually "me")
+                  example: me
+                apikey_id:
+                  type: string
+                  description: Optional API key identifier for audit logging
+                args:
+                  type: array
+                  items:
+                    type: string
+                  description: Arguments to pass to the container entrypoint
+                  example:
+                  - -c
+                  - echo hello; sleep infinity;
+                entrypoint:
+                  type: string
+                  description: Override entrypoint for args launch instance
+                  example: bash
+                use_ssh:
+                  type: boolean
+                  description: Launch as an SSH instance type (deprecated, use runtype instead)
+                python_utf8:
+                  type: boolean
+                  description: Set python's locale to C.UTF-8
+                lang_utf8:
+                  type: boolean
+                  description: Install and generate locales before instance launch, set locale to C.UTF-8
+                use_jupyter_lab:
+                  type: boolean
+                  description: Launch instance with jupyter lab instead of notebook
+                jupyter_dir:
+                  type: string
+                  description: Directory in instance to use to launch jupyter
+                force:
+                  type: boolean
+                  description: Skip sanity checks when creating from an existing instance
+                user:
+                  type: string
+                  description: User to use with docker create (breaks some images, use with caution)
+                volume_info:
+                  type: object
+                  description: Volume creation/linking information
+                  properties:
+                    create_new:
+                      type: boolean
+                      description: Whether to create a new volume
+                    volume_id:
+                      type: integer
+                      description: ID of existing volume to link or volume offer ID for new volume
+                    size:
+                      type: integer
+                      description: Size of the volume in GB (for new volumes)
+                    mount_path:
+                      type: string
+                      description: Mount path for the volume inside the container
+                    name:
+                      type: string
+                      description: Label for the new volume
+      responses:
+        '200':
+          description: Instance created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  new_contract:
+                    type: integer
+                    description: ID of the newly created instance contract
+                    example: 1234568
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    enum:
+                    - invalid_args
+                    - invalid_price
+                    - no_ssh_key_for_vm
+                  msg:
+                    type: string
+                    example: 'error 400/3467: Invalid args: ''id'' is required and must be a valid offer ID'
+                  ask_id:
+                    type: integer
+                    example: 1234567
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: invalid_args
+                  msg:
+                    type: string
+                    example: 'error 403/3586: Offer 1234567 is not your own. Hosts can only rent their own machines.'
+                  ask_id:
+                    type: integer
+                    example: 1234567
+        '404':
+          description: Offer not found or not available
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: invalid_args
+                  msg:
+                    type: string
+                    example: 'error 404/3603: no_such_ask Instance type by id 1234567 is not available.'
+                  ask_id:
+                    type: integer
+                    example: 1234567
+        '410':
+          description: Offer no longer available (when cancel_unavail is true and instance cannot start)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: no_such_ask
+                  msg:
+                    type: string
+                    example: 'error 410/3907: no_such_ask Instance type 1234567 is no longer available.'
+                  ask_id:
+                    type: integer
+                    example: 1234567
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=4.5
+      tags:
+      - Instances
+  /api/v0/instances/{id}/:
+    delete:
+      summary: destroy instance
+      description: 'Destroys/deletes an instance permanently. This is irreversible and will delete all data.
+
+
+        CLI Usage: vast-ai destroy instance <id>
+
+        Example: vast-ai destroy instance 4242'
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: ID of the instance to destroy
+        example: 4242
+      responses:
+        '200':
+          description: Instance destroyed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                    description: Whether the destruction was successful
+                  msg:
+                    type: string
+                    description: Optional status message
+                    example: Instance destroyed successfully
+        '400':
+          description: Bad request - invalid instance ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: invalid_args
+                  msg:
+                    type: string
+                    example: invalid instance_id
+        '404':
+          description: Instance not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: not_found
+                  msg:
+                    type: string
+                    example: Instance not found
+        '429':
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: rate_limit_exceeded
+                  msg:
+                    type: string
+                    example: API requests too frequent endpoint threshold=3.0
+      security:
+      - BearerAuth: []
+      tags:
+      - Instances
+    put:
+      summary: manage instance
+      description: 'Manage instance state and labels. The operation is determined by the request body parameters.
+
+
+        CLI Usage:
+
+        - To stop: vastai stop instance <ID>
+
+        - To start: vastai start instance <ID>
+
+        - To label: vastai label instance <ID> <label>'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: ID of the instance to modify
+        example: 1234
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: At least one of these parameters should be provided
+              properties:
+                state:
+                  type: string
+                  description: Change instance state (optional)
+                  enum:
+                  - stopped
+                  - running
+                  example: stopped
+                label:
+                  type: string
+                  description: Text label to assign to the instance (optional)
+                  maxLength: 1024
+                  example: My ML Training Job
+      responses:
+        '200':
+          description: Operation completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleBooleanSuccessResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=1.0
+      tags:
+      - Instances
+    get:
+      summary: show instance
+      description: 'Retrieves the details of a specific instance for the authenticated user.
+
+        This endpoint returns detailed information including SSH connection parameters, instance state, resource utilization, template data, and pricing details.'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: The ID of the instance to retrieve.
+        required: true
+        schema:
+          type: integer
+        example: 123
+      responses:
+        '200':
+          description: Success response with instance details.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  instances:
+                    $ref: '#/components/schemas/Instance'
+        '400':
+          description: Bad Request – Invalid instance ID or invalid arguments.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized – Invalid or missing authentication.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests – API requests are too frequent.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=2.0
+      tags:
+      - Instances
+  /api/v0/instances/{id}/ssh/{key}/:
+    delete:
+      summary: detach ssh-key
+      description: 'Detaches an SSH key from a specified instance, removing SSH access for
+
+        that key.
+
+
+
+        CLI Usage: vastai detach <instance_id> <ssh_key_id>
+
+
+        Example: vastai detach 99999 12345'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the instance to detach the SSH key from
+        schema:
+          type: integer
+          example: 99999
+      - name: key
+        in: path
+        required: true
+        description: Numeric ID of the SSH key to detach
+        schema:
+          type: integer
+          example: 12345
+      responses:
+        '200':
+          description: SSH key successfully detached
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  msg:
+                    type: string
+                    example: SSH key removed from instance.
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    enum:
+                    - invalid_request
+                  msg:
+                    type: string
+                    example: Invalid request parameters
+        '404':
+          description: Instance or SSH key not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    enum:
+                    - no_such_instance
+                    - no_such_ssh_key
+                  msg:
+                    type: string
+                    example: Instance not found.
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=2.0
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: delete_ssh_from_instance
+                  msg:
+                    type: string
+                    example: Error deleting SSH key from instance
+      tags:
+      - Instances
+  /api/v0/instances/command/{id}/:
+    put:
+      summary: execute
+      description: 'Executes a constrained remote command on a specified instance.
+
+        The command output can be retrieved from the returned result URL.
+
+
+        CLI Usage: vastai execute <instance_id> <command>
+
+        Example: vastai execute 12345 "ls -l"'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the instance to execute command on
+        schema:
+          type: integer
+          example: 12345
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - command
+              properties:
+                command:
+                  type: string
+                  description: Command to execute on the instance
+                  example: ls -l
+                  maxLength: 512
+      responses:
+        '200':
+          description: Command queued successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  writeable_path:
+                    type: string
+                    description: Container writeable path
+                    example: /workspace
+                  result_url:
+                    type: string
+                    description: URL to fetch command execution results
+                    example: https://s3.amazonaws.com/vast.ai/instance_logs/abc123.log
+                  msg:
+                    type: string
+                    example: Command is executing, wait a few seconds and then view the result_url
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    enum:
+                    - invalid_args
+                    - invalid_container_id
+                    - invalid_container
+                  msg:
+                    type: string
+                    example: Invalid command given.
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - User is blacklisted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=1.5
+        '483':
+          description: Invalid JSON body
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    example: invalid_args
+                  msg:
+                    type: string
+                    example: Invalid json_body
+      tags:
+      - Instances
+  /api/v0/instances/request_logs/{id}:
+    put:
+      summary: show logs
+      description: 'Request logs from a specific instance. The logs will be uploaded to S3 and
+
+        can be retrieved from a generated URL. Supports both container logs and daemon
+
+        system logs.
+
+
+        CLI Usage: vast logs INSTANCE_ID [--tail LINES] [--filter GREP] [--daemon-logs]'
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ID of the instance to get logs from
+        schema:
+          type: integer
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tail:
+                  type: string
+                  description: Number of lines to show from end of logs
+                  example: '1000'
+                filter:
+                  type: string
+                  description: Grep filter to apply to log entries
+                daemon_logs:
+                  type: string
+                  enum:
+                  - 'true'
+                  description: If "true", fetch daemon system logs instead of container logs
+      responses:
+        '200':
+          description: Success response with S3 URL for log retrieval
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  result_url:
+                    type: string
+                    description: S3 URL where logs can be downloaded
+                    example: https://s3.amazonaws.com/vast.ai/instance_logs/{hash}.log
+                  msg:
+                    type: string
+                    description: Status message
+        '404':
+          description: Instance not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: invalid_id
+                  msg:
+                    type: string
+                    example: Invalid instance id.
+        '403':
+          description: Not authorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: not_authorized
+                  msg:
+                    type: string
+                    example: Not authorized to view logs for this instance
+      tags:
+      - Instances
+  /api/v0/instances/prepay/{id}/:
+    put:
+      summary: prepay instance
+      description: 'Deposit credits into a reserved instance to receive usage discounts.
+
+        The discount rate is calculated based on how many months of usage the prepaid amount covers.
+
+        Maximum discount is typically 40%.
+
+
+        CLI Usage: vastai prepay instance <ID> <AMOUNT>
+
+        Example: vastai prepay instance 1234 500.0'
+      security:
+      - BearerAuth: []
+      parameters:
+      - in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        description: ID of the instance to prepay for
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - amount
+              properties:
+                amount:
+                  type: number
+                  format: float
+                  description: Amount of credits to prepay
+                  example: 500.0
+      responses:
+        '200':
+          description: Successfully applied prepayment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  timescale:
+                    type: number
+                    format: float
+                    description: Number of months the prepayment will cover
+                    example: 3.5
+                  discount_rate:
+                    type: number
+                    format: float
+                    description: Applied discount rate (0.0-0.4)
+                    example: 0.3
+        '400':
+          description: Invalid instance ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  msg:
+                    type: string
+                    example: No such instance
+        '411':
+          description: Insufficient credit balance
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  msg:
+                    type: string
+                    example: Insufficient credit
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=2.0
+      tags:
+      - Instances
+  /api/v0/instances/reboot/{id}/:
+    put:
+      summary: reboot instance
+      description: 'Stops and starts a container without losing GPU priority. Updates container status to ''rebooting''
+
+        and executes docker stop/start commands on the host machine.
+
+
+        CLI Usage: vastai reboot instance <ID>'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: ID of the instance to reboot
+        example: 1234
+      responses:
+        '200':
+          description: Instance reboot initiated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    enum:
+                    - invalid_args
+                  msg:
+                    type: string
+                    example: invalid instance_id
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=1.0
+      tags:
+      - Instances
+  /api/v0/instances/recycle/{id}/:
+    put:
+      summary: recycle instance
+      description: 'Destroys and recreates container in place (from newly pulled image) without losing GPU priority.
+
+        Updates container status to ''recycling'' and executes docker stop/remove commands on the host machine.
+
+
+        CLI Usage: vastai recycle instance <ID>'
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: ID of the instance to recycle
+        example: 1234
+      responses:
+        '200':
+          description: Instance recycle initiated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: Bad Request - Invalid instance ID
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: string
+                    enum:
+                    - invalid_id
+                  msg:
+                    type: string
+                    example: Invalid instance id.
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=1.0
+      tags:
+      - Instances
+  /api/v0/instances/{instance_id}/ssh/:
+    get:
+      summary: show ssh-keys
+      description: Retrieves the SSH keys associated with a specific instance.
+      security:
+      - BearerAuth: []
+      parameters:
+      - name: instance_id
+        in: path
+        required: true
+        schema:
+          type: integer
+        description: The ID of the instance to retrieve SSH keys for.
+        example: 17816188
+      responses:
+        '200':
+          description: Success response with SSH keys
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  ssh_keys:
+                    type: string
+                    description: JSON string containing array of SSH key objects
+                    example: '[{"id": 1, "name": "my-key", "public_key": "ssh-rsa AAAA..."}]'
+        '400':
+          description: Bad Request - Invalid instance ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized - Invalid or missing authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Instance not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      tags:
+      - Instances
+  /api/v0/instances/:
+    get:
+      summary: show instances
+      description: 'Retrieve a list of instances for the authenticated user.
+
+
+        CLI Usage: vast-ai show instances [OPTIONS] [--api-key API_KEY] [--raw]'
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: Success response with user instances
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  instances:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 123
+                        start_date:
+                          type: number
+                          format: float
+                          example: 1633036800.0
+                        duration:
+                          type: number
+                          format: float
+                          example: 3600.0
+                        extra_env:
+                          type: object
+                          additionalProperties:
+                            type: string
+                            example: value
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: API requests too frequent endpoint threshold=2.0
+      tags:
+      - Instances
+components:
+  schemas:
+    Instance:
+      type: object
+      description: Detailed information about an instance.
+      properties:
+        id:
+          type: integer
+          example: 123
+          description: Unique identifier for the instance.
+        ssh_idx:
+          type: string
+          example: ssh1
+          description: Identifier for the SSH forwarder used.
+        ssh_host:
+          type: string
+          nullable: true
+          example: 192.168.1.10
+          description: Host (or IP) used for SSH connection.
+        ssh_port:
+          type: integer
+          nullable: true
+          example: 22
+          description: Port used for SSH connection.
+        actual_status:
+          type: string
+          enum:
+          - running
+          - stopped
+          - frozen
+          - loading
+          - unknown
+          - offline
+          - rebooting
+          - recycling
+          example: running
+          description: Current status of the instance container.
+        intended_status:
+          type: string
+          enum:
+          - running
+          - stopped
+          - frozen
+          example: running
+          description: Intended status of the instance container.
+        cur_state:
+          type: string
+          enum:
+          - running
+          - stopped
+          - unloaded
+          example: running
+          description: Current state of the machine contract.
+        next_state:
+          type: string
+          enum:
+          - running
+          - stopped
+          - unloaded
+          example: running
+          description: Next scheduled state for the machine contract.
+        template_id:
+          type: integer
+          example: 45
+          description: Identifier for the instance template.
+        template_hash_id:
+          type: string
+          example: abc123
+          description: Hash identifier for the instance template.
+        image_uuid:
+          type: string
+          example: uuid-1234
+          description: Unique identifier for the instance image.
+        image_args:
+          type: string
+          example: --arg1 value
+          description: Arguments used when launching the instance image.
+        image_runtype:
+          type: string
+          enum:
+          - ssh
+          - args
+          example: ssh
+          description: How the instance image is executed.
+        extra_env:
+          type: array
+          items:
+            type: string
+          example:
+          - VAR1=value1
+          - VAR2=value2
+          description: Additional environment variables.
+        onstart:
+          type: string
+          example: init.sh
+          description: Script or command executed when the instance starts.
+        label:
+          type: string
+          example: Instance 123
+          description: A human-readable label for the instance.
+        jupyter_token:
+          type: string
+          example: token123
+          description: Jupyter token if the instance provides a Jupyter environment.
+        status_msg:
+          type: string
+          example: Running normally
+          description: A message describing the current status.
+        gpu_util:
+          type: number
+          format: float
+          example: 0.75
+          description: Current GPU utilization as a fraction.
+        gpu_arch:
+          type: string
+          example: Volta
+          description: GPU architecture of the instance.
+        disk_util:
+          type: number
+          format: float
+          example: 75
+          description: Disk utilization percentage.
+        disk_usage:
+          type: number
+          format: float
+          example: 75
+          description: Disk usage percentage.
+        gpu_temp:
+          type: number
+          format: float
+          example: 65
+          description: Current GPU temperature in Celsius.
+        cuda_max_good:
+          type: number
+          format: float
+          example: 11.2
+          description: Maximum CUDA version that is considered optimal.
+        driver_version:
+          type: string
+          example: 460.32.03
+          description: Version of the GPU driver installed.
+        public_ipaddr:
+          type: string
+          example: 203.0.113.1
+          description: Public IP address of the instance.
+        local_ipaddrs:
+          type: array
+          items:
+            type: string
+          example:
+          - 192.168.1.5
+          description: List of local IP addresses for the instance.
+        direct_port_end:
+          type: integer
+          example: 8001
+          description: The ending port number for direct connections.
+        direct_port_start:
+          type: integer
+          example: 8000
+          description: The starting port number for direct connections.
+        cpu_util:
+          type: number
+          format: float
+          example: 0.65
+          description: CPU utilization as a fraction.
+        mem_usage:
+          type: number
+          format: float
+          example: 4096
+          description: Memory usage in megabytes.
+        mem_limit:
+          type: number
+          format: float
+          example: 8192
+          description: Memory limit in megabytes.
+        vmem_usage:
+          type: number
+          format: float
+          example: 4096
+          description: Virtual memory usage in megabytes.
+        machine_dir_ssh_port:
+          type: integer
+          example: 2222
+          description: Calculated SSH port for accessing the machine directory.
+        uptime_mins:
+          type: number
+          format: float
+          example: 120
+          description: Uptime of the instance in minutes.
+        ports:
+          type: array
+          items:
+            type: integer
+          example:
+          - 8080
+          - 8081
+          description: List of additional ports exposed by the instance.
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+        msg:
+          type: string
+    SimpleBooleanSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: API key authentication
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+    ApiKeyAuth:
+      type: apiKey
+      in: query
+      name: api_key
+      description: API key must be provided as a query parameter
