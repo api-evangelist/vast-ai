@@ -5,7 +5,20 @@ description: Vast.ai is a decentralized GPU marketplace that matches buyers with
   a REST API, Python SDK, and vastai CLI for searching GPU offers, renting instances,
   attaching persistent volumes, and running serverless workloads across 68+ GPU types
   including H100, H200, B200, A100, and consumer RTX cards.
-image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+accessModel:
+  pricing: free
+  onboarding: self-serve
+  trial: false
+  try_now: true
+  public: false
+  label: Free · Self-serve signup
+  confidence: high
+  source:
+  - plans
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/vast-ai.png
 url: https://raw.githubusercontent.com/api-evangelist/vast-ai/refs/heads/main/apis.yml
 created: '2026-05-23'
 modified: '2026-05-23'
@@ -24,11 +37,11 @@ tags:
 apis:
 - aid: vast-ai:rest-api
   name: Vast.ai REST API
-  description: The Vast.ai REST API is the control plane for the GPU marketplace.
-    It supports searching offers across hosts, renting and managing instances, configuring
-    machines and templates, attaching persistent volumes, managing serverless endpoints,
-    and querying billing and usage. Authentication uses bearer tokens issued from
-    the Keys management page.
+  description: >-
+    The Vast.ai REST API is the control plane for the GPU marketplace. It supports searching offers across
+    hosts, renting and managing instances, configuring machines and templates, attaching persistent volumes,
+    managing serverless endpoints, and querying billing and usage. Authentication uses bearer tokens issued
+    from the Keys management page.
   humanURL: https://docs.vast.ai/api/
   baseURL: https://console.vast.ai/api/v0
   tags:
@@ -48,6 +61,106 @@ apis:
     url: https://docs.vast.ai/api/authentication
   - url: graphql/vast-ai-graphql.md
     type: GraphQL
+- aid: vast-ai:vast-ai-accounts-api
+  name: Vast.ai Accounts API
+  description: The Accounts API from Vast.ai — 13 operation(s) for accounts.
+  humanURL: https://docs.vast.ai/api/
+  baseURL: https://console.vast.ai/api/v0
+  tags:
+  - Accounts
+  properties:
+  - type: OpenAPI
+    url: openapi/vast-ai-accounts-api-openapi.yml
+- aid: vast-ai:vast-ai-billing-api
+  name: Vast.ai Billing API
+  description: The Billing API from Vast.ai — 4 operation(s) for billing.
+  humanURL: https://docs.vast.ai/api/
+  baseURL: https://console.vast.ai/api/v0
+  tags:
+  - Billing
+  properties:
+  - type: OpenAPI
+    url: openapi/vast-ai-billing-api-openapi.yml
+- aid: vast-ai:vast-ai-instances-api
+  name: Vast.ai Instances API
+  description: The Instances API from Vast.ai — 14 operation(s) for instances.
+  humanURL: https://docs.vast.ai/api/
+  baseURL: https://console.vast.ai/api/v0
+  tags:
+  - Instances
+  properties:
+  - type: OpenAPI
+    url: openapi/vast-ai-instances-api-openapi.yml
+- aid: vast-ai:vast-ai-machines-api
+  name: Vast.ai Machines API
+  description: The Machines API from Vast.ai — 10 operation(s) for machines.
+  humanURL: https://docs.vast.ai/api/
+  baseURL: https://console.vast.ai/api/v0
+  tags:
+  - Machines
+  properties:
+  - type: OpenAPI
+    url: openapi/vast-ai-machines-api-openapi.yml
+- aid: vast-ai:vast-ai-network-volumes-api
+  name: Vast.ai Network Volumes API
+  description: The Network Volumes API from Vast.ai — 4 operation(s) for network volumes.
+  humanURL: https://docs.vast.ai/api/
+  baseURL: https://console.vast.ai/api/v0
+  tags:
+  - Network Volumes
+  properties:
+  - type: OpenAPI
+    url: openapi/vast-ai-network-volumes-api-openapi.yml
+- aid: vast-ai:vast-ai-search-api
+  name: Vast.ai Search API
+  description: The Search API from Vast.ai — 3 operation(s) for search.
+  humanURL: https://docs.vast.ai/api/
+  baseURL: https://console.vast.ai/api/v0
+  tags:
+  - Search
+  properties:
+  - type: OpenAPI
+    url: openapi/vast-ai-search-api-openapi.yml
+- aid: vast-ai:vast-ai-serverless-api
+  name: Vast.ai Serverless API
+  description: The Serverless API from Vast.ai — 9 operation(s) for serverless.
+  humanURL: https://docs.vast.ai/api/
+  baseURL: https://console.vast.ai/api/v0
+  tags:
+  - Serverless
+  properties:
+  - type: OpenAPI
+    url: openapi/vast-ai-serverless-api-openapi.yml
+- aid: vast-ai:vast-ai-team-api
+  name: Vast.ai Team API
+  description: The Team API from Vast.ai — 9 operation(s) for team.
+  humanURL: https://docs.vast.ai/api/
+  baseURL: https://console.vast.ai/api/v0
+  tags:
+  - Team
+  properties:
+  - type: OpenAPI
+    url: openapi/vast-ai-team-api-openapi.yml
+- aid: vast-ai:vast-ai-templates-api
+  name: Vast.ai Templates API
+  description: The Templates API from Vast.ai — 1 operation(s) for templates.
+  humanURL: https://docs.vast.ai/api/
+  baseURL: https://console.vast.ai/api/v0
+  tags:
+  - Templates
+  properties:
+  - type: OpenAPI
+    url: openapi/vast-ai-templates-api-openapi.yml
+- aid: vast-ai:vast-ai-volumes-api
+  name: Vast.ai Volumes API
+  description: The Volumes API from Vast.ai — 4 operation(s) for volumes.
+  humanURL: https://docs.vast.ai/api/
+  baseURL: https://console.vast.ai/api/v0
+  tags:
+  - Volumes
+  properties:
+  - type: OpenAPI
+    url: openapi/vast-ai-volumes-api-openapi.yml
 common:
 - type: AgenticAccess
   url: agentic-access/vast-ai-agentic-access.yml
