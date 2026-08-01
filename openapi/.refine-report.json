@@ -1,0 +1,32 @@
+{
+  "provider": "vast-ai",
+  "sources": [
+    "vast-ai-accounts-api-openapi.yml",
+    "vast-ai-billing-api-openapi.yml",
+    "vast-ai-instances-api-openapi.yml",
+    "vast-ai-machines-api-openapi.yml",
+    "vast-ai-network-volumes-api-openapi.yml",
+    "vast-ai-search-api-openapi.yml",
+    "vast-ai-serverless-api-openapi.yml",
+    "vast-ai-team-api-openapi.yml",
+    "vast-ai-templates-api-openapi.yml",
+    "vast-ai-volumes-api-openapi.yml"
+  ],
+  "outputs": [
+    "vast-ai-accounts-api-openapi.yml",
+    "vast-ai-billing-api-openapi.yml",
+    "vast-ai-instances-api-openapi.yml",
+    "vast-ai-machines-api-openapi.yml",
+    "vast-ai-network-volumes-api-openapi.yml",
+    "vast-ai-search-api-openapi.yml",
+    "vast-ai-serverless-api-openapi.yml",
+    "vast-ai-team-api-openapi.yml",
+    "vast-ai-templates-api-openapi.yml",
+    "vast-ai-volumes-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
