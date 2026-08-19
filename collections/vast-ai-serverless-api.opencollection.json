@@ -1,0 +1,235 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vast.ai Accounts Serverless API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Serverless",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "show workergroup",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/workergroups/"
+          },
+          "docs": "Retrieves the list of workergroups associated with the authenticated user.\n\nCLI Usage: vastai show workergroups"
+        },
+        {
+          "info": {
+            "name": "create workergroup",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/workergroups/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new workergroup configuration that manages worker instances for a serverless endpoint.\n\nCLI Usage: vast-ai create workergroup --template_hash <HASH> --endpoint_name <NAME> [options]"
+        },
+        {
+          "info": {
+            "name": "show endpoints",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/endptjobs/"
+          },
+          "docs": "Retrieve a list of endpoint jobs for the authenticated user."
+        },
+        {
+          "info": {
+            "name": "create endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/endptjobs/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint creates a new job processing endpoint with specified parameters.\n\nCLI Usage: vast-ai create endpoint"
+        },
+        {
+          "info": {
+            "name": "update workergroup",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/workergroups/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the workergroup to update."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the properties of an existing workergroup based on the provided parameters.\n\nCLI Usage: vastai update workergroup <ID> [OPTIONS]"
+        },
+        {
+          "info": {
+            "name": "delete workergroup",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/workergroups/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the workergroup to delete"
+              }
+            ]
+          },
+          "docs": "Deletes an existing workergroup.\n\nCLI Usage: vastai delete workergroup <ID>"
+        },
+        {
+          "info": {
+            "name": "update endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/endptjobs/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the endpoint group to update"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the specified endpoint group with the provided parameters.\n\nCLI Usage: vastai update endpoint ID [OPTIONS]"
+        },
+        {
+          "info": {
+            "name": "delete endpoint",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/endptjobs/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the endpoint group to delete"
+              }
+            ]
+          },
+          "docs": "Deletes an endpoint group by ID. Associated workergroups will also be deleted.\n\nCLI Usage: vastai delete endpoint <ID>"
+        },
+        {
+          "info": {
+            "name": "get workergroup logs",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/get_workergroup_logs/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves logs for a specific workergroup by ID."
+        },
+        {
+          "info": {
+            "name": "get workergroup workers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/get_workergroup_workers/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves the current list and status of workers for a specific workergroup.\n\nUseful for monitoring, debugging connectivity issues, and understanding resource usage within a workergroup."
+        },
+        {
+          "info": {
+            "name": "get endpoint logs",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/get_endpoint_logs/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves logs for a specific endpoint by name."
+        },
+        {
+          "info": {
+            "name": "get endpoint workers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/get_endpoint_workers/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves the current list and status of workers for a specific endpoint.\n\nUseful for monitoring, debugging connectivity issues, and understanding resource usage."
+        },
+        {
+          "info": {
+            "name": "route",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/route/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Calls on the serverless engine to retrieve a GPU instance address within your endpoint for processing a request.\n\nThe engine will return either a ready worker URL or status information if no workers are available."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

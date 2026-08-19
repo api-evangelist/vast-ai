@@ -1,0 +1,218 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vast.ai Accounts Machines API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Machines",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "cancel maint",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/machines/:machine_id/cancel_maint",
+            "params": [
+              {
+                "name": "machine_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the machine to cancel maintenance for."
+              }
+            ]
+          },
+          "docs": "Cancel a scheduled maintenance window for a specified machine."
+        },
+        {
+          "info": {
+            "name": "cleanup machine",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/machines/:machine_id/cleanup",
+            "params": [
+              {
+                "name": "machine_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the machine to clean up."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint removes expired contracts on a specified machine, freeing up space.\n\nCLI Usage: vast-ai cleanup machine {machine_id}"
+        },
+        {
+          "info": {
+            "name": "list machine",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/machines/create_asks/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates or updates ask contracts for a machine to list it for rent on the vast.ai platform.\nAllows setting pricing, minimum GPU requirements, end date and discount rates.\n\nCLI Usage: vast list machine <machine_id> [options]"
+        },
+        {
+          "info": {
+            "name": "remove defjob",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/machines/:machine_id/defjob",
+            "params": [
+              {
+                "name": "machine_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the machine to remove the default job from."
+              }
+            ]
+          },
+          "docs": "Deletes the default job (background instances) for a specified machine.\n\nCLI Usage: vast-ai remove defjob {machine_id}"
+        },
+        {
+          "info": {
+            "name": "show reports",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/machines/:machine_id/reports",
+            "params": [
+              {
+                "name": "machine_id",
+                "value": "",
+                "type": "path",
+                "description": "The unique identifier of the machine."
+              }
+            ]
+          },
+          "docs": "Retrieves a list of the most recent reports for a given machine. Each report includes details such as the problem identified, a message describing the issue, and the timestamp when the report was created.\n\nCLI Usage: vastai reports <machine_id>"
+        },
+        {
+          "info": {
+            "name": "schedule maint",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/machines/:machine_id/dnotify",
+            "params": [
+              {
+                "name": "machine_id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the machine to schedule maintenance for."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Schedules a maintenance window for a specified machine and notifies clients.\n\nCLI Usage: vast-ai schedule maint {machine_id} --sdate {sdate} --duration {duration}"
+        },
+        {
+          "info": {
+            "name": "set defjob",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/machines/create_bids/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates default jobs (background instances) for a specified machine with the given parameters.\n\nCLI Usage: vast set defjob {machine_id} --price_gpu {price} --price_inetu {price} --price_inetd {price} --image {image} [--args {args}]"
+        },
+        {
+          "info": {
+            "name": "set min-bid",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/machines/:machine_id/minbid",
+            "params": [
+              {
+                "name": "machine_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the machine."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Sets the minimum bid price for a specified machine.\n\nCLI Usage: vast set min-bid {machine_id} --price {price}"
+        },
+        {
+          "info": {
+            "name": "show machines",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/machines/",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "query",
+                "description": "The ID of the user whose machines are being requested."
+              }
+            ]
+          },
+          "docs": "Fetches data for multiple machines associated with the authenticated user."
+        },
+        {
+          "info": {
+            "name": "unlist machine",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/machines/:machine_id/asks",
+            "params": [
+              {
+                "name": "machine_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the machine to unlist."
+              }
+            ]
+          },
+          "docs": "Removes all 'ask' type offer contracts for a specified machine, effectively unlisting it from being available for rent.\n\nCLI Usage: vastai unlist machine <id>"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

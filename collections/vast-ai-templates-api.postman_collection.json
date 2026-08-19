@@ -1,0 +1,299 @@
+{
+  "item": [
+    {
+      "id": "6f0cd0f0-c367-4dcf-83cf-ba1656b3d75b",
+      "name": "Templates",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "53c47e98-9da5-4198-bb15-a8c52eb8abad",
+          "name": "create template",
+          "request": {
+            "name": "create template",
+            "description": {
+              "content": "Creates a new template for launching instances. If an identical template already exists,\nreturns the existing template instead of creating a duplicate.\n\nCLI Usage: vast create template [options]",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v0",
+                "template",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"image\": \"<string>\",\n  \"tag\": \"<string>\",\n  \"env\": \"<string>\",\n  \"onstart\": \"<string>\",\n  \"jup_direct\": \"<boolean>\",\n  \"ssh_direct\": \"<boolean>\",\n  \"use_jupyter_lab\": \"<boolean>\",\n  \"runtype\": \"<string>\",\n  \"use_ssh\": \"<boolean>\",\n  \"jupyter_dir\": \"<string>\",\n  \"docker_login_repo\": \"<string>\",\n  \"extra_filters\": \"<object>\",\n  \"recommended_disk_space\": \"<number>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "1776dd0d-e374-407f-ba1a-49dcfda39fb8",
+              "name": "Template created or existing template found",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v0",
+                    "template",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"image\": \"ghcr.io/huggingface/text-generation-inference:1.0.3\",\n  \"tag\": \"<string>\",\n  \"env\": \"-p 3000:3000 -e MODEL_ARGS='--model-id TheBloke/Llama-2-7B-chat-GPTQ'\",\n  \"onstart\": \"<string>\",\n  \"jup_direct\": \"<boolean>\",\n  \"ssh_direct\": \"<boolean>\",\n  \"use_jupyter_lab\": \"<boolean>\",\n  \"runtype\": \"<string>\",\n  \"use_ssh\": \"<boolean>\",\n  \"jupyter_dir\": \"<string>\",\n  \"docker_login_repo\": \"<string>\",\n  \"extra_filters\": \"<object>\",\n  \"recommended_disk_space\": \"<number>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"msg\": \"string\",\n  \"template\": {\n    \"id\": 8442,\n    \"hash_id\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "00138683-7381-4ea2-af19-4ef47154e7bc",
+              "name": "Bad request - invalid parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v0",
+                    "template",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"image\": \"ghcr.io/huggingface/text-generation-inference:1.0.3\",\n  \"tag\": \"<string>\",\n  \"env\": \"-p 3000:3000 -e MODEL_ARGS='--model-id TheBloke/Llama-2-7B-chat-GPTQ'\",\n  \"onstart\": \"<string>\",\n  \"jup_direct\": \"<boolean>\",\n  \"ssh_direct\": \"<boolean>\",\n  \"use_jupyter_lab\": \"<boolean>\",\n  \"runtype\": \"<string>\",\n  \"use_ssh\": \"<boolean>\",\n  \"jupyter_dir\": \"<string>\",\n  \"docker_login_repo\": \"<string>\",\n  \"extra_filters\": \"<object>\",\n  \"recommended_disk_space\": \"<number>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"msg\": \"Template Failed to be Created\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c20481cc-646a-49d8-bf3d-5387fc964438",
+              "name": "Unauthorized - invalid or missing API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v0",
+                    "template",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"image\": \"ghcr.io/huggingface/text-generation-inference:1.0.3\",\n  \"tag\": \"<string>\",\n  \"env\": \"-p 3000:3000 -e MODEL_ARGS='--model-id TheBloke/Llama-2-7B-chat-GPTQ'\",\n  \"onstart\": \"<string>\",\n  \"jup_direct\": \"<boolean>\",\n  \"ssh_direct\": \"<boolean>\",\n  \"use_jupyter_lab\": \"<boolean>\",\n  \"runtype\": \"<string>\",\n  \"use_ssh\": \"<boolean>\",\n  \"jupyter_dir\": \"<string>\",\n  \"docker_login_repo\": \"<string>\",\n  \"extra_filters\": \"<object>\",\n  \"recommended_disk_space\": \"<number>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "7c73ce13-5697-4c59-9476-df3d2deaf728",
+              "name": "Rate limit exceeded",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v0",
+                    "template",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"image\": \"ghcr.io/huggingface/text-generation-inference:1.0.3\",\n  \"tag\": \"<string>\",\n  \"env\": \"-p 3000:3000 -e MODEL_ARGS='--model-id TheBloke/Llama-2-7B-chat-GPTQ'\",\n  \"onstart\": \"<string>\",\n  \"jup_direct\": \"<boolean>\",\n  \"ssh_direct\": \"<boolean>\",\n  \"use_jupyter_lab\": \"<boolean>\",\n  \"runtype\": \"<string>\",\n  \"use_ssh\": \"<boolean>\",\n  \"jupyter_dir\": \"<string>\",\n  \"docker_login_repo\": \"<string>\",\n  \"extra_filters\": \"<object>\",\n  \"recommended_disk_space\": \"<number>\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://console.vast.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "525214e0-d45a-40e7-9363-6cfe5b50ac93",
+    "name": "Vast.ai Accounts Templates API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "API for managing cloud GPU instances, volumes, and resources on Vast.ai\n\nContact Support:\n Name: Vast.ai Support",
+      "type": "text/plain"
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vast.ai Accounts Search API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Search",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "search templates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/template/",
+            "params": [
+              {
+                "name": "query",
+                "value": "",
+                "type": "query",
+                "description": "Search query string to match against template fields."
+              },
+              {
+                "name": "select_filters",
+                "value": "",
+                "type": "query",
+                "description": "Filters to apply on the search results."
+              },
+              {
+                "name": "order_by",
+                "value": "",
+                "type": "query",
+                "description": "Column to order the results by."
+              }
+            ]
+          },
+          "docs": "Searches for templates based on query parameters and retrieves matching templates.\n\nCLI Usage: vast search templates"
+        },
+        {
+          "info": {
+            "name": "search benchmarks",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/benchmarks/",
+            "params": [
+              {
+                "name": "query",
+                "value": "score>1000",
+                "type": "query",
+                "description": "Search query string to filter benchmarks."
+              }
+            ]
+          },
+          "docs": "Retrieve benchmark data based on search parameters.\n\nCLI Usage: vast-ai search benchmarks"
+        },
+        {
+          "info": {
+            "name": "search offers",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/search/asks/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Search for available GPU machine offers with advanced filtering and sorting.\nDefault filters applied unless --no-default: - verified: true - external: false - rentable: true - rented: false\nCLI Usage Examples: ``` vast search offers 'reliability > 0.99 num_gpus>=4' vast search offers 'gpu_name=RTX_3090' --order=dph_total vast search offers 'cuda_vers>=11.0' --no-default ```"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

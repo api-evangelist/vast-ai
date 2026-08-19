@@ -1,0 +1,103 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vast.ai Accounts Volumes API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Volumes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "delete volume",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/volumes",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Delete a volume by its ID. CLI Usage: vastai delete volume VOLUME_ID"
+        },
+        {
+          "info": {
+            "name": "list volumes",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/volumes/"
+          },
+          "docs": "Retrieve information about all volumes rented by you. CLI Usage: vastai show volumes"
+        },
+        {
+          "info": {
+            "name": "rent volume",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/volumes/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Rent/create a new volume with specified parameters. CLI Usage: vastai create volume ID --size SIZE_GB"
+        },
+        {
+          "info": {
+            "name": "search volumes",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/volumes/search/",
+            "params": [
+              {
+                "name": "q",
+                "value": "[object Object]",
+                "type": "query",
+                "description": "Query parameters for filtering volume search results"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Search for available volumes based on specified criteria. CLI Usage: vastai search volumes <query> [OPTIONS]"
+        },
+        {
+          "info": {
+            "name": "unlist volume",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/volumes/unlist",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Remove a volume listing from the marketplace. CLI Usage: vastai unlist volume VOLUME_ID"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

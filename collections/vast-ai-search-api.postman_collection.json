@@ -1,0 +1,779 @@
+{
+  "item": [
+    {
+      "id": "6218a8d2-a9c0-4a65-b61a-2b514c8fa810",
+      "name": "Search",
+      "description": {
+        "content": "",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "289bc73b-48e4-4922-98e4-55d19e468977",
+          "name": "search templates",
+          "request": {
+            "name": "search templates",
+            "description": {
+              "content": "Searches for templates based on query parameters and retrieves matching templates.\n\nCLI Usage: vast search templates",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v0",
+                "template",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "query",
+                  "value": "<string>",
+                  "description": "Search query string to match against template fields."
+                },
+                {
+                  "disabled": false,
+                  "key": "order_by",
+                  "value": "<string>",
+                  "description": "Column to order the results by."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "id": "ca19e792-1f46-4b03-bb3b-833c491ffbe7",
+              "name": "Successfully retrieved templates",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v0",
+                    "template",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "query",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "order_by",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"templates_found\": 5,\n  \"templates\": [\n    {\n      \"id\": 7757,\n      \"name\": \"string\",\n      \"image\": \"string\"\n    },\n    {\n      \"id\": 6631,\n      \"name\": \"string\",\n      \"image\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "36745ea4-db84-4f63-9452-22fc7028ce78",
+              "name": "Bad Request",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v0",
+                    "template",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "query",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "order_by",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"error\": \"string\",\n  \"msg\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "410ad14d-01c9-432c-90ea-2a73a7f02a68",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v0",
+                    "template",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "query",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "order_by",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"error\": \"string\",\n  \"msg\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "634a4c06-144d-4555-977c-90711430d834",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v0",
+                    "template",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "query",
+                      "value": "<string>"
+                    },
+                    {
+                      "key": "order_by",
+                      "value": "<string>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"API requests too frequent endpoint threshold=3.0\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "04549108-aff0-4dcf-8fd0-fe240fad7096",
+          "name": "search benchmarks",
+          "request": {
+            "name": "search benchmarks",
+            "description": {
+              "content": "Retrieve benchmark data based on search parameters.\n\nCLI Usage: vast-ai search benchmarks",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v0",
+                "benchmarks",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "query",
+                  "value": "<string>",
+                  "description": "Search query string to filter benchmarks."
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET"
+          },
+          "response": [
+            {
+              "id": "ed347551-a2d3-4c82-a84e-b2985b8f905c",
+              "name": "Success response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v0",
+                    "benchmarks",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "query",
+                      "value": "score>1000"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"contract_id\": 9772,\n    \"id\": 964,\n    \"image\": \"string\",\n    \"last_update\": 5354.071490343157,\n    \"machine_id\": 4505,\n    \"model\": \"string\",\n    \"name\": \"string\",\n    \"num_gpus\": 2683,\n    \"score\": 754.7017777341003\n  },\n  {\n    \"contract_id\": 4847,\n    \"id\": 7807,\n    \"image\": \"string\",\n    \"last_update\": 8244.868620856976,\n    \"machine_id\": 597,\n    \"model\": \"string\",\n    \"name\": \"string\",\n    \"num_gpus\": 3710,\n    \"score\": 8569.313953199297\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "4af0489a-3dae-458c-b2b7-e4e53f95b99d",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v0",
+                    "benchmarks",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "query",
+                      "value": "score>1000"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"error\": \"string\",\n  \"msg\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b59d4f47-ee88-470f-9d62-6054a664cd39",
+              "name": "Too Many Requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v0",
+                    "benchmarks",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [
+                    {
+                      "key": "query",
+                      "value": "score>1000"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"API requests too frequent endpoint threshold=3.0\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "e72d802d-317e-46ad-9ace-9c280c094a2d",
+          "name": "search offers",
+          "request": {
+            "name": "search offers",
+            "description": {
+              "content": "Search for available GPU machine offers with advanced filtering and sorting.\nDefault filters applied unless --no-default: - verified: true - external: false - rentable: true - rented: false\nCLI Usage Examples: ``` vast search offers 'reliability > 0.99 num_gpus>=4' vast search offers 'gpu_name=RTX_3090' --order=dph_total vast search offers 'cuda_vers>=11.0' --no-default ```",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "api",
+                "v0",
+                "search",
+                "asks",
+                ""
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"select_cols\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"q\": {\n    \"verified\": \"<object>\",\n    \"rentable\": \"<object>\",\n    \"external\": \"<object>\",\n    \"rented\": \"<object>\",\n    \"order\": [\n      [\n        \"<string>\",\n        \"<string>\"\n      ],\n      [\n        \"<string>\",\n        \"<string>\"\n      ]\n    ],\n    \"type\": \"<string>\",\n    \"limit\": \"<integer>\",\n    \"disable_bundling\": \"<boolean>\",\n    \"allocated_storage\": \"<number>\",\n    \"reliability2\": \"<object>\",\n    \"num_gpus\": \"<object>\",\n    \"gpu_name\": \"<object>\",\n    \"cuda_max_good\": \"<object>\",\n    \"gpu_ram\": \"<object>\",\n    \"dlperf_per_dphtotal\": \"<object>\",\n    \"inet_down\": \"<object>\",\n    \"inet_up\": \"<object>\",\n    \"direct_port_count\": \"<object>\",\n    \"geolocation\": \"<object>\",\n    \"bw_nvlink\": \"<object>\",\n    \"compute_cap\": \"<object>\",\n    \"cpu_arch\": \"<object>\",\n    \"cpu_cores\": \"<object>\",\n    \"cpu_ghz\": \"<object>\",\n    \"datacenter\": \"<object>\",\n    \"disk_bw\": \"<object>\",\n    \"dlperf\": \"<object>\",\n    \"dlperf_usd\": \"<object>\",\n    \"driver_version\": \"<object>\",\n    \"duration\": \"<object>\",\n    \"flops_usd\": \"<object>\",\n    \"gpu_arch\": \"<object>\",\n    \"gpu_max_power\": \"<object>\",\n    \"gpu_max_temp\": \"<object>\",\n    \"gpu_mem_bw\": \"<object>\",\n    \"gpu_total_ram\": \"<object>\",\n    \"gpu_frac\": \"<object>\",\n    \"gpu_display_active\": \"<object>\",\n    \"has_avx\": \"<object>\",\n    \"pci_gen\": \"<object>\",\n    \"storage_cost\": \"<object>\",\n    \"static_ip\": \"<object>\",\n    \"total_flops\": \"<object>\",\n    \"ubuntu_version\": \"<object>\",\n    \"vms_enabled\": \"<object>\",\n    \"machine_id\": \"<object>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "43ef45a4-6cbc-4f54-955a-04d49c1e9d41",
+              "name": "Successful search response",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v0",
+                    "search",
+                    "asks",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"select_cols\": [\n    \"*\"\n  ],\n  \"q\": {\n    \"verified\": {\n      \"eq\": true\n    },\n    \"rentable\": {\n      \"eq\": true\n    },\n    \"external\": {\n      \"eq\": false\n    },\n    \"rented\": {\n      \"eq\": false\n    },\n    \"order\": [\n      [\n        \"dph_total\",\n        \"asc\"\n      ]\n    ],\n    \"type\": \"<string>\",\n    \"limit\": \"<integer>\",\n    \"disable_bundling\": \"<boolean>\",\n    \"allocated_storage\": \"<number>\",\n    \"reliability2\": {\n      \"gt\": 0.98\n    },\n    \"num_gpus\": {\n      \"gte\": 4\n    },\n    \"gpu_name\": {\n      \"eq\": \"RTX 3090\"\n    },\n    \"cuda_max_good\": {\n      \"gte\": 11\n    },\n    \"gpu_ram\": {\n      \"gte\": 24000\n    },\n    \"dlperf_per_dphtotal\": {\n      \"gt\": 50\n    },\n    \"inet_down\": {\n      \"gt\": 100\n    },\n    \"inet_up\": {\n      \"gt\": 100\n    },\n    \"direct_port_count\": {\n      \"gt\": 1\n    },\n    \"geolocation\": {\n      \"in\": [\n        \"TW\",\n        \"SE\"\n      ]\n    },\n    \"bw_nvlink\": {\n      \"gt\": 100\n    },\n    \"compute_cap\": {\n      \"gte\": 700\n    },\n    \"cpu_arch\": {\n      \"eq\": \"amd64\"\n    },\n    \"cpu_cores\": {\n      \"gte\": 8\n    },\n    \"cpu_ghz\": {\n      \"gt\": 3\n    },\n    \"datacenter\": {\n      \"eq\": true\n    },\n    \"disk_bw\": {\n      \"gt\": 500\n    },\n    \"dlperf\": {\n      \"gt\": 20\n    },\n    \"dlperf_usd\": {\n      \"gt\": 10\n    },\n    \"driver_version\": {\n      \"gte\": \"535.86.05\"\n    },\n    \"duration\": {\n      \"gte\": 30\n    },\n    \"flops_usd\": {\n      \"gt\": 1\n    },\n    \"gpu_arch\": {\n      \"eq\": \"nvidia\"\n    },\n    \"gpu_max_power\": {\n      \"lte\": 300\n    },\n    \"gpu_max_temp\": {\n      \"lte\": 85\n    },\n    \"gpu_mem_bw\": {\n      \"gt\": 500\n    },\n    \"gpu_total_ram\": {\n      \"gte\": 48\n    },\n    \"gpu_frac\": {\n      \"eq\": 1\n    },\n    \"gpu_display_active\": {\n      \"eq\": false\n    },\n    \"has_avx\": {\n      \"eq\": true\n    },\n    \"pci_gen\": {\n      \"gte\": 4\n    },\n    \"storage_cost\": {\n      \"lte\": 0.1\n    },\n    \"static_ip\": {\n      \"eq\": true\n    },\n    \"total_flops\": {\n      \"gt\": 100\n    },\n    \"ubuntu_version\": {\n      \"eq\": \"20.04\"\n    },\n    \"vms_enabled\": {\n      \"eq\": false\n    },\n    \"machine_id\": {\n      \"eq\": 12345\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": true,\n  \"offers\": [\n    {\n      \"id\": 7095,\n      \"cuda_max_good\": 2581.3288591656237,\n      \"num_gpus\": 2262,\n      \"gpu_name\": \"string\",\n      \"pcie_bw\": 6884.510736527857,\n      \"cpu_cores_effective\": 6034.957845501432,\n      \"cpu_ram\": 2844.223435060607,\n      \"disk_space\": 5171.206202451418,\n      \"dph_total\": 9499.769593063469,\n      \"dlperf\": 454.15670129852145,\n      \"dlperf_per_dphtotal\": 931.7296460782287,\n      \"inet_up\": 4666.868541758155,\n      \"inet_down\": 214.08959925877102,\n      \"reliability2\": 8099.338143129835,\n      \"verified\": true,\n      \"rentable\": false,\n      \"rented\": false,\n      \"machine_id\": 1550,\n      \"geolocation\": \"string\",\n      \"direct_port_count\": 7267,\n      \"max_bid\": 2202.299481033041,\n      \"min_bid\": 7487.345206367198,\n      \"bw_nvlink\": 313.99493833468625,\n      \"compute_cap\": 8977,\n      \"cpu_arch\": \"string\",\n      \"gpu_arch\": \"string\",\n      \"driver_version\": \"string\",\n      \"ubuntu_version\": \"string\"\n    },\n    {\n      \"id\": 3183,\n      \"cuda_max_good\": 5238.127693542447,\n      \"num_gpus\": 8327,\n      \"gpu_name\": \"string\",\n      \"pcie_bw\": 3045.9817505338992,\n      \"cpu_cores_effective\": 2533.7042239407315,\n      \"cpu_ram\": 5082.811989208101,\n      \"disk_space\": 562.1477622140236,\n      \"dph_total\": 729.7317942103155,\n      \"dlperf\": 7532.481888420212,\n      \"dlperf_per_dphtotal\": 8149.421464059037,\n      \"inet_up\": 4236.531700030601,\n      \"inet_down\": 9754.880673635625,\n      \"reliability2\": 9103.627386450984,\n      \"verified\": true,\n      \"rentable\": true,\n      \"rented\": true,\n      \"machine_id\": 2704,\n      \"geolocation\": \"string\",\n      \"direct_port_count\": 2113,\n      \"max_bid\": 1842.7909171892254,\n      \"min_bid\": 4646.797413521475,\n      \"bw_nvlink\": 9778.733220126845,\n      \"compute_cap\": 5451,\n      \"cpu_arch\": \"string\",\n      \"gpu_arch\": \"string\",\n      \"driver_version\": \"string\",\n      \"ubuntu_version\": \"string\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1af91f7a-181d-4e1c-8953-15f207b9bdfd",
+              "name": "Bad request - invalid query parameters",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v0",
+                    "search",
+                    "asks",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"select_cols\": [\n    \"*\"\n  ],\n  \"q\": {\n    \"verified\": {\n      \"eq\": true\n    },\n    \"rentable\": {\n      \"eq\": true\n    },\n    \"external\": {\n      \"eq\": false\n    },\n    \"rented\": {\n      \"eq\": false\n    },\n    \"order\": [\n      [\n        \"dph_total\",\n        \"asc\"\n      ]\n    ],\n    \"type\": \"<string>\",\n    \"limit\": \"<integer>\",\n    \"disable_bundling\": \"<boolean>\",\n    \"allocated_storage\": \"<number>\",\n    \"reliability2\": {\n      \"gt\": 0.98\n    },\n    \"num_gpus\": {\n      \"gte\": 4\n    },\n    \"gpu_name\": {\n      \"eq\": \"RTX 3090\"\n    },\n    \"cuda_max_good\": {\n      \"gte\": 11\n    },\n    \"gpu_ram\": {\n      \"gte\": 24000\n    },\n    \"dlperf_per_dphtotal\": {\n      \"gt\": 50\n    },\n    \"inet_down\": {\n      \"gt\": 100\n    },\n    \"inet_up\": {\n      \"gt\": 100\n    },\n    \"direct_port_count\": {\n      \"gt\": 1\n    },\n    \"geolocation\": {\n      \"in\": [\n        \"TW\",\n        \"SE\"\n      ]\n    },\n    \"bw_nvlink\": {\n      \"gt\": 100\n    },\n    \"compute_cap\": {\n      \"gte\": 700\n    },\n    \"cpu_arch\": {\n      \"eq\": \"amd64\"\n    },\n    \"cpu_cores\": {\n      \"gte\": 8\n    },\n    \"cpu_ghz\": {\n      \"gt\": 3\n    },\n    \"datacenter\": {\n      \"eq\": true\n    },\n    \"disk_bw\": {\n      \"gt\": 500\n    },\n    \"dlperf\": {\n      \"gt\": 20\n    },\n    \"dlperf_usd\": {\n      \"gt\": 10\n    },\n    \"driver_version\": {\n      \"gte\": \"535.86.05\"\n    },\n    \"duration\": {\n      \"gte\": 30\n    },\n    \"flops_usd\": {\n      \"gt\": 1\n    },\n    \"gpu_arch\": {\n      \"eq\": \"nvidia\"\n    },\n    \"gpu_max_power\": {\n      \"lte\": 300\n    },\n    \"gpu_max_temp\": {\n      \"lte\": 85\n    },\n    \"gpu_mem_bw\": {\n      \"gt\": 500\n    },\n    \"gpu_total_ram\": {\n      \"gte\": 48\n    },\n    \"gpu_frac\": {\n      \"eq\": 1\n    },\n    \"gpu_display_active\": {\n      \"eq\": false\n    },\n    \"has_avx\": {\n      \"eq\": true\n    },\n    \"pci_gen\": {\n      \"gte\": 4\n    },\n    \"storage_cost\": {\n      \"lte\": 0.1\n    },\n    \"static_ip\": {\n      \"eq\": true\n    },\n    \"total_flops\": {\n      \"gt\": 100\n    },\n    \"ubuntu_version\": {\n      \"eq\": \"20.04\"\n    },\n    \"vms_enabled\": {\n      \"eq\": false\n    },\n    \"machine_id\": {\n      \"eq\": 12345\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"error\": \"string\",\n  \"msg\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b4940111-cf17-448b-9f25-148fad12e2b8",
+              "name": "Unauthorized - invalid or missing API key",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v0",
+                    "search",
+                    "asks",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"select_cols\": [\n    \"*\"\n  ],\n  \"q\": {\n    \"verified\": {\n      \"eq\": true\n    },\n    \"rentable\": {\n      \"eq\": true\n    },\n    \"external\": {\n      \"eq\": false\n    },\n    \"rented\": {\n      \"eq\": false\n    },\n    \"order\": [\n      [\n        \"dph_total\",\n        \"asc\"\n      ]\n    ],\n    \"type\": \"<string>\",\n    \"limit\": \"<integer>\",\n    \"disable_bundling\": \"<boolean>\",\n    \"allocated_storage\": \"<number>\",\n    \"reliability2\": {\n      \"gt\": 0.98\n    },\n    \"num_gpus\": {\n      \"gte\": 4\n    },\n    \"gpu_name\": {\n      \"eq\": \"RTX 3090\"\n    },\n    \"cuda_max_good\": {\n      \"gte\": 11\n    },\n    \"gpu_ram\": {\n      \"gte\": 24000\n    },\n    \"dlperf_per_dphtotal\": {\n      \"gt\": 50\n    },\n    \"inet_down\": {\n      \"gt\": 100\n    },\n    \"inet_up\": {\n      \"gt\": 100\n    },\n    \"direct_port_count\": {\n      \"gt\": 1\n    },\n    \"geolocation\": {\n      \"in\": [\n        \"TW\",\n        \"SE\"\n      ]\n    },\n    \"bw_nvlink\": {\n      \"gt\": 100\n    },\n    \"compute_cap\": {\n      \"gte\": 700\n    },\n    \"cpu_arch\": {\n      \"eq\": \"amd64\"\n    },\n    \"cpu_cores\": {\n      \"gte\": 8\n    },\n    \"cpu_ghz\": {\n      \"gt\": 3\n    },\n    \"datacenter\": {\n      \"eq\": true\n    },\n    \"disk_bw\": {\n      \"gt\": 500\n    },\n    \"dlperf\": {\n      \"gt\": 20\n    },\n    \"dlperf_usd\": {\n      \"gt\": 10\n    },\n    \"driver_version\": {\n      \"gte\": \"535.86.05\"\n    },\n    \"duration\": {\n      \"gte\": 30\n    },\n    \"flops_usd\": {\n      \"gt\": 1\n    },\n    \"gpu_arch\": {\n      \"eq\": \"nvidia\"\n    },\n    \"gpu_max_power\": {\n      \"lte\": 300\n    },\n    \"gpu_max_temp\": {\n      \"lte\": 85\n    },\n    \"gpu_mem_bw\": {\n      \"gt\": 500\n    },\n    \"gpu_total_ram\": {\n      \"gte\": 48\n    },\n    \"gpu_frac\": {\n      \"eq\": 1\n    },\n    \"gpu_display_active\": {\n      \"eq\": false\n    },\n    \"has_avx\": {\n      \"eq\": true\n    },\n    \"pci_gen\": {\n      \"gte\": 4\n    },\n    \"storage_cost\": {\n      \"lte\": 0.1\n    },\n    \"static_ip\": {\n      \"eq\": true\n    },\n    \"total_flops\": {\n      \"gt\": 100\n    },\n    \"ubuntu_version\": {\n      \"eq\": \"20.04\"\n    },\n    \"vms_enabled\": {\n      \"eq\": false\n    },\n    \"machine_id\": {\n      \"eq\": 12345\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"error\": \"string\",\n  \"msg\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c77edad8-530b-4977-b2ed-6aed46254d47",
+              "name": "Too many requests",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "api",
+                    "v0",
+                    "search",
+                    "asks",
+                    ""
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"select_cols\": [\n    \"*\"\n  ],\n  \"q\": {\n    \"verified\": {\n      \"eq\": true\n    },\n    \"rentable\": {\n      \"eq\": true\n    },\n    \"external\": {\n      \"eq\": false\n    },\n    \"rented\": {\n      \"eq\": false\n    },\n    \"order\": [\n      [\n        \"dph_total\",\n        \"asc\"\n      ]\n    ],\n    \"type\": \"<string>\",\n    \"limit\": \"<integer>\",\n    \"disable_bundling\": \"<boolean>\",\n    \"allocated_storage\": \"<number>\",\n    \"reliability2\": {\n      \"gt\": 0.98\n    },\n    \"num_gpus\": {\n      \"gte\": 4\n    },\n    \"gpu_name\": {\n      \"eq\": \"RTX 3090\"\n    },\n    \"cuda_max_good\": {\n      \"gte\": 11\n    },\n    \"gpu_ram\": {\n      \"gte\": 24000\n    },\n    \"dlperf_per_dphtotal\": {\n      \"gt\": 50\n    },\n    \"inet_down\": {\n      \"gt\": 100\n    },\n    \"inet_up\": {\n      \"gt\": 100\n    },\n    \"direct_port_count\": {\n      \"gt\": 1\n    },\n    \"geolocation\": {\n      \"in\": [\n        \"TW\",\n        \"SE\"\n      ]\n    },\n    \"bw_nvlink\": {\n      \"gt\": 100\n    },\n    \"compute_cap\": {\n      \"gte\": 700\n    },\n    \"cpu_arch\": {\n      \"eq\": \"amd64\"\n    },\n    \"cpu_cores\": {\n      \"gte\": 8\n    },\n    \"cpu_ghz\": {\n      \"gt\": 3\n    },\n    \"datacenter\": {\n      \"eq\": true\n    },\n    \"disk_bw\": {\n      \"gt\": 500\n    },\n    \"dlperf\": {\n      \"gt\": 20\n    },\n    \"dlperf_usd\": {\n      \"gt\": 10\n    },\n    \"driver_version\": {\n      \"gte\": \"535.86.05\"\n    },\n    \"duration\": {\n      \"gte\": 30\n    },\n    \"flops_usd\": {\n      \"gt\": 1\n    },\n    \"gpu_arch\": {\n      \"eq\": \"nvidia\"\n    },\n    \"gpu_max_power\": {\n      \"lte\": 300\n    },\n    \"gpu_max_temp\": {\n      \"lte\": 85\n    },\n    \"gpu_mem_bw\": {\n      \"gt\": 500\n    },\n    \"gpu_total_ram\": {\n      \"gte\": 48\n    },\n    \"gpu_frac\": {\n      \"eq\": 1\n    },\n    \"gpu_display_active\": {\n      \"eq\": false\n    },\n    \"has_avx\": {\n      \"eq\": true\n    },\n    \"pci_gen\": {\n      \"gte\": 4\n    },\n    \"storage_cost\": {\n      \"lte\": 0.1\n    },\n    \"static_ip\": {\n      \"eq\": true\n    },\n    \"total_flops\": {\n      \"gt\": 100\n    },\n    \"ubuntu_version\": {\n      \"eq\": \"20.04\"\n    },\n    \"vms_enabled\": {\n      \"eq\": false\n    },\n    \"machine_id\": {\n      \"eq\": 12345\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Too Many Requests",
+              "code": 429,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"success\": false,\n  \"error\": \"string\",\n  \"msg\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://console.vast.ai",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "fbd970b9-2c40-4290-a91a-76f4513eab53",
+    "name": "Vast.ai Accounts Search API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "API for managing cloud GPU instances, volumes, and resources on Vast.ai\n\nContact Support:\n Name: Vast.ai Support",
+      "type": "text/plain"
+    }
+  }
+}

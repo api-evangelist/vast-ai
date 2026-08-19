@@ -1,0 +1,349 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vast.ai Accounts API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Accounts",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "show api keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/auth/apikeys/"
+          },
+          "docs": "Retrieves all API keys associated with the authenticated user.\n\nCLI Usage: vastai show api-keys"
+        },
+        {
+          "info": {
+            "name": "create api-key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/auth/apikeys/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new API key with specified permissions for the authenticated user.\n\nCLI Usage: vast create api-key --name NAME --permission_file PERMISSIONS [--key_params PARAMS]\n\nExample:\nvast create api-key --name \"read-only\" --permission_file permissions.json"
+        },
+        {
+          "info": {
+            "name": "show env vars",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/secrets/"
+          },
+          "docs": "Retrieve a list of environment variables (secrets) for the authenticated user.\n\nCLI Usage: vast-ai show env-vars [-s]"
+        },
+        {
+          "info": {
+            "name": "create env-var",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/secrets/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new encrypted environment variable for the authenticated user.\nKeys are automatically converted to uppercase. Values are encrypted before storage.\nThere is a limit on the total number of environment variables per user.\n\nCLI Usage: vast create env-var KEY VALUE"
+        },
+        {
+          "info": {
+            "name": "update env var",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/secrets/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the value of an existing environment variable for the authenticated user.\n\nCLI Usage: vast-ai set env-var KEY VALUE"
+        },
+        {
+          "info": {
+            "name": "delete env var",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/secrets/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Deletes an environment variable associated with the authenticated user.\nThe variable must exist and belong to the requesting user.\n\nCLI Usage: vastai delete env-var <name>"
+        },
+        {
+          "info": {
+            "name": "show ssh keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/ssh/",
+            "headers": [
+              {
+                "name": "Authorization",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Retrieve a list of SSH keys associated with the authenticated user's account."
+        },
+        {
+          "info": {
+            "name": "create ssh-key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/ssh/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new SSH key and associates it with your account.\nThe key will be automatically added to all your current instances.\n\nCLI Usage: vast create ssh-key <ssh_key>\nExample: vast create ssh-key \"ssh-rsa AAAAB3NzaC1...\""
+        },
+        {
+          "info": {
+            "name": "create subaccount",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/users/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates either a standalone user account or a subaccount under a parent account.\nSubaccounts can be restricted to host-only functionality.\n\nCLI Usage: vastai create subaccount --email EMAIL --username USERNAME --password PASSWORD --type host"
+        },
+        {
+          "info": {
+            "name": "set user",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/users/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the user data for the authenticated user.\n\nCLI Usage: vast set user --file {file_path}"
+        },
+        {
+          "info": {
+            "name": "show api key",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/auth/apikeys/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "123",
+                "type": "path",
+                "description": "ID of the API key to retrieve"
+              }
+            ]
+          },
+          "docs": "Retrieves an existing API key belonging to the authenticated user.\n\nCLI Usage: vastai show api-key ID"
+        },
+        {
+          "info": {
+            "name": "delete api key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/auth/apikeys/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "123",
+                "type": "path",
+                "description": "ID of the API key to delete"
+              }
+            ]
+          },
+          "docs": "Deletes an existing API key belonging to the authenticated user.\nThe API key is soft-deleted by setting a deleted_at timestamp.\n\nCLI Usage: vastai delete api-key ID"
+        },
+        {
+          "info": {
+            "name": "update ssh key",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/ssh/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the SSH key to update"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates the specified SSH key with the provided value.\n\nCLI Usage: vastai update ssh-key id ssh_key"
+        },
+        {
+          "info": {
+            "name": "delete ssh key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/ssh/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the SSH key to delete"
+              }
+            ]
+          },
+          "docs": "Removes an SSH key from the authenticated user's account\nCLI Usage: vastai delete ssh-key <id>`"
+        },
+        {
+          "info": {
+            "name": "reset api key",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/commands/reset_apikey/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Resets the API key for the authenticated user. This operation generates a new API key and invalidates the old one.\n\nCLI Usage: vast-ai reset api-key"
+        },
+        {
+          "info": {
+            "name": "show connections",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/users/cloud_integrations/"
+          },
+          "docs": "Retrieves the list of cloud connections associated with the authenticated user.\n\nCLI Usage: vastai show connections"
+        },
+        {
+          "info": {
+            "name": "show ipaddrs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/users/:user_id/ipaddrs/",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "me",
+                "type": "path",
+                "description": "The ID of the user whose IP address history is being retrieved."
+              }
+            ]
+          },
+          "docs": "This endpoint retrieves the history of IP address accesses for the authenticated user.\n\nCLI Usage: vast-ai show ipaddrs"
+        },
+        {
+          "info": {
+            "name": "show subaccounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/subaccounts/"
+          },
+          "docs": "Retrieve a list of subaccounts associated with the authenticated user's account.\n\nCLI Usage: vast-ai show subaccounts"
+        },
+        {
+          "info": {
+            "name": "show team role",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/team/roles/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "admin",
+                "type": "path",
+                "description": "Name of the team role"
+              }
+            ]
+          },
+          "docs": "Retrieve details of a specific team role by its name.\n\nCLI Usage: vastai show team-role NAME"
+        },
+        {
+          "info": {
+            "name": "show user",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/users/current/"
+          },
+          "docs": "Retrieve information about the current authenticated user, excluding the API key.\n\nCLI Usage: vastai show user"
+        },
+        {
+          "info": {
+            "name": "transfer credit",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/commands/transfer_credit/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Transfers specified amount of credits from the authenticated user's account to another user's account.\nThe recipient can be specified by either email address or user ID.\n\nCLI Usage: vast.py transfer credit <recipient_email> <amount>"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

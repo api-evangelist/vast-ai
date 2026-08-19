@@ -1,0 +1,160 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vast.ai Accounts Billing API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Billing",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "search invoices",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/invoices",
+            "params": [
+              {
+                "name": "select_filters",
+                "value": "",
+                "type": "query",
+                "description": "Filters to apply to the invoice selection."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Type of invoices to retrieve (e.g., charge)."
+              }
+            ]
+          },
+          "docs": "This endpoint allows users to search and retrieve invoices based on specified filters.\n\nCLI Usage: vast-ai search invoices"
+        },
+        {
+          "info": {
+            "name": "show deposit",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/instances/balance/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the instance."
+              }
+            ]
+          },
+          "docs": "Retrieves the deposit details for a specified instance.\n\nCLI Usage: vast show deposit {ID}"
+        },
+        {
+          "info": {
+            "name": "show earnings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/users/:user_id/machine-earnings/",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the user."
+              },
+              {
+                "name": "sday",
+                "value": "",
+                "type": "query",
+                "description": "Start day for the earnings report."
+              },
+              {
+                "name": "eday",
+                "value": "",
+                "type": "query",
+                "description": "End day for the earnings report."
+              },
+              {
+                "name": "machid",
+                "value": "",
+                "type": "query",
+                "description": "Optional machine ID to filter earnings."
+              },
+              {
+                "name": "last_days",
+                "value": "",
+                "type": "query",
+                "description": "Number of days to look back from today."
+              }
+            ]
+          },
+          "docs": "Retrieves the earnings history for a specified time range and optionally per machine.\n\nCLI Usage: vastai show earnings [OPTIONS]"
+        },
+        {
+          "info": {
+            "name": "show invoices",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/users/:user_id/invoices/",
+            "params": [
+              {
+                "name": "user_id",
+                "value": "me",
+                "type": "path",
+                "description": "The ID of the user whose invoices are being retrieved."
+              },
+              {
+                "name": "inc_charges",
+                "value": "true",
+                "type": "query",
+                "description": "Include charge items in the report."
+              },
+              {
+                "name": "only_payouts",
+                "value": "false",
+                "type": "query",
+                "description": "Show only payout items."
+              },
+              {
+                "name": "no_payouts",
+                "value": "false",
+                "type": "query",
+                "description": "Exclude payout items."
+              },
+              {
+                "name": "sdate",
+                "value": "2023-01-01T00:00:00Z",
+                "type": "query",
+                "description": "Start date and time for the report."
+              },
+              {
+                "name": "edate",
+                "value": "2023-12-31T23:59:59Z",
+                "type": "query",
+                "description": "End date and time for the report."
+              }
+            ]
+          },
+          "docs": "This endpoint retrieves billing history reports for the authenticated user, including charges and credits.\n\nCLI Usage: vast-ai show invoices"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

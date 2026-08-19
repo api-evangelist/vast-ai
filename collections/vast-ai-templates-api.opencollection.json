@@ -1,0 +1,39 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vast.ai Accounts Templates API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Templates",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "create template",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/template/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new template for launching instances. If an identical template already exists,\nreturns the existing template instead of creating a duplicate.\n\nCLI Usage: vast create template [options]"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

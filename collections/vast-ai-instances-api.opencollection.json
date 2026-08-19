@@ -1,0 +1,376 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vast.ai Accounts Instances API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Instances",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "attach ssh-key",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/instances/:id/ssh/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the instance to attach the SSH key to"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Attaches an SSH key to the specified instance, allowing SSH access using the provided key.\n\nCLI Usage: vast attach instance_id ssh_key"
+        },
+        {
+          "info": {
+            "name": "copy",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/commands/copy_direct/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Initiate a remote copy operation to transfer data from one instance to another or between an instance and the local machine."
+        },
+        {
+          "info": {
+            "name": "cancel copy",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/commands/copy_direct/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Cancel a remote copy operation specified by the destination ID (dst_id)."
+        },
+        {
+          "info": {
+            "name": "cloud copy",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/commands/rclone/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Starts a cloud copy operation by sending a command to the remote server. The operation can transfer data between an instance and a cloud service."
+        },
+        {
+          "info": {
+            "name": "cancel sync",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/commands/rclone/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Cancels an in-progress remote sync operation identified by the destination instance ID.\nThis operation cannot be resumed once canceled and must be restarted if needed."
+        },
+        {
+          "info": {
+            "name": "change bid",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/instances/bid_price/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "Instance ID"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Change the current bid price of an instance to a specified price.\nCLI Usage: vastai change bid id [--price PRICE]"
+        },
+        {
+          "info": {
+            "name": "create instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/asks/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the offer to accept"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new instance by accepting an \"ask\" contract from a provider. This is the main endpoint for launching new instances on Vast.ai.\nCLI Usage: vast create instance <offer_id> [options]"
+        },
+        {
+          "info": {
+            "name": "show instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/instances/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "123",
+                "type": "path",
+                "description": "The ID of the instance to retrieve."
+              }
+            ]
+          },
+          "docs": "Retrieves the details of a specific instance for the authenticated user.\nThis endpoint returns detailed information including SSH connection parameters, instance state, resource utilization, template data, and pricing details."
+        },
+        {
+          "info": {
+            "name": "manage instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/instances/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "1234",
+                "type": "path",
+                "description": "ID of the instance to modify"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Manage instance state and labels. The operation is determined by the request body parameters.\n\nCLI Usage:\n- To stop: vastai stop instance <ID>\n- To start: vastai start instance <ID>\n- To label: vastai label instance <ID> <label>"
+        },
+        {
+          "info": {
+            "name": "destroy instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/instances/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "4242",
+                "type": "path",
+                "description": "ID of the instance to destroy"
+              }
+            ]
+          },
+          "docs": "Destroys/deletes an instance permanently. This is irreversible and will delete all data.\n\nCLI Usage: vast-ai destroy instance <id>\nExample: vast-ai destroy instance 4242"
+        },
+        {
+          "info": {
+            "name": "detach ssh-key",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://console.vast.ai/api/v0/instances/:id/ssh/:key/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the instance to detach the SSH key from"
+              },
+              {
+                "name": "key",
+                "value": "",
+                "type": "path",
+                "description": "Numeric ID of the SSH key to detach"
+              }
+            ]
+          },
+          "docs": "Detaches an SSH key from a specified instance, removing SSH access for\nthat key.\n\n\nCLI Usage: vastai detach <instance_id> <ssh_key_id>\n\nExample: vastai detach 99999 12345"
+        },
+        {
+          "info": {
+            "name": "execute",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/instances/command/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the instance to execute command on"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Executes a constrained remote command on a specified instance.\nThe command output can be retrieved from the returned result URL.\n\nCLI Usage: vastai execute <instance_id> <command>\nExample: vastai execute 12345 \"ls -l\""
+        },
+        {
+          "info": {
+            "name": "show logs",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/instances/request_logs/:id",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the instance to get logs from"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Request logs from a specific instance. The logs will be uploaded to S3 and\ncan be retrieved from a generated URL. Supports both container logs and daemon\nsystem logs.\n\nCLI Usage: vast logs INSTANCE_ID [--tail LINES] [--filter GREP] [--daemon-logs]"
+        },
+        {
+          "info": {
+            "name": "prepay instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/instances/prepay/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "ID of the instance to prepay for"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Deposit credits into a reserved instance to receive usage discounts.\nThe discount rate is calculated based on how many months of usage the prepaid amount covers.\nMaximum discount is typically 40%.\n\nCLI Usage: vastai prepay instance <ID> <AMOUNT>\nExample: vastai prepay instance 1234 500.0"
+        },
+        {
+          "info": {
+            "name": "reboot instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/instances/reboot/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "1234",
+                "type": "path",
+                "description": "ID of the instance to reboot"
+              }
+            ]
+          },
+          "docs": "Stops and starts a container without losing GPU priority. Updates container status to 'rebooting'\nand executes docker stop/start commands on the host machine.\n\nCLI Usage: vastai reboot instance <ID>"
+        },
+        {
+          "info": {
+            "name": "recycle instance",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/instances/recycle/:id/",
+            "params": [
+              {
+                "name": "id",
+                "value": "1234",
+                "type": "path",
+                "description": "ID of the instance to recycle"
+              }
+            ]
+          },
+          "docs": "Destroys and recreates container in place (from newly pulled image) without losing GPU priority.\nUpdates container status to 'recycling' and executes docker stop/remove commands on the host machine.\n\nCLI Usage: vastai recycle instance <ID>"
+        },
+        {
+          "info": {
+            "name": "show ssh-keys",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/instances/:instance_id/ssh/",
+            "params": [
+              {
+                "name": "instance_id",
+                "value": "17816188",
+                "type": "path",
+                "description": "The ID of the instance to retrieve SSH keys for."
+              }
+            ]
+          },
+          "docs": "Retrieves the SSH keys associated with a specific instance."
+        },
+        {
+          "info": {
+            "name": "show instances",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://console.vast.ai/api/v0/instances/"
+          },
+          "docs": "Retrieve a list of instances for the authenticated user.\n\nCLI Usage: vast-ai show instances [OPTIONS] [--api-key API_KEY] [--raw]"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

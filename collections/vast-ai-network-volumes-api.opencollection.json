@@ -1,0 +1,99 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Vast.ai Accounts Network Volumes API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Network Volumes",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "add network-disk",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/network_disk/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Adds a network disk to be used to create network volume offers, or adds machines to an existing network disk.\nCLI Usage: vast add network_disk <machine_id>... <mount_point> [options]"
+        },
+        {
+          "info": {
+            "name": "list network-volume",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/network_volume/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Lists a network disk for rent as network volumes, or updates an existing listing with a new price/size/end date/discount\nCLI Usage: vast list network-volume <disk_id> [options]"
+        },
+        {
+          "info": {
+            "name": "create network-volume",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://console.vast.ai/api/v0/network_volume/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a network volume from an offer\nCLI Usage: vast create network-volume <offer_id>"
+        },
+        {
+          "info": {
+            "name": "search network volumes",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/network_volumes/search/",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Search for available GPU machine offers with advanced filtering and sorting.\nCLI Usage: ``` vast search network-volumes --order=storage_cost 'reliability > 0.99 geolocation in [US, CA]'```"
+        },
+        {
+          "info": {
+            "name": "unlist network-volume",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://console.vast.ai/api/v0/network_volume/unlist",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Unlists a network volume for rent\nCLI Usage: vast unlist network-volume <offer_id>"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
