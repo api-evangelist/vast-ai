@@ -27,6 +27,14 @@ type: Index
 access: 3rd-Party
 position: Producer
 tags:
+- Artificial Intelligence
+- Cloud
+- Compute
+- GPU
+- Machine-Learning
+- Marketplace
+- Serverless
+tags_raw:
 - AI
 - Cloud
 - Compute
@@ -67,6 +75,8 @@ apis:
   humanURL: https://docs.vast.ai/api/
   baseURL: https://console.vast.ai/api/v0
   tags:
+  - Account
+  tags_raw:
   - Accounts
   properties:
   - type: OpenAPI
