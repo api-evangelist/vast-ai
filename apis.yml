@@ -5,6 +5,18 @@ description: Vast.ai is a decentralized GPU marketplace that matches buyers with
   a REST API, Python SDK, and vastai CLI for searching GPU offers, renting instances,
   attaching persistent volumes, and running serverless workloads across 68+ GPU types
   including H100, H200, B200, A100, and consumer RTX cards.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: free
   onboarding: self-serve
