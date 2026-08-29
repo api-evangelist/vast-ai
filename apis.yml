@@ -226,7 +226,7 @@ common:
   type: SDKs
 - name: Vast.ai Base Image
   url: https://github.com/vast-ai/base-image
-  type: Samples
+  type: Examples
 - type: Features
   data:
   - name: GPU Marketplace
