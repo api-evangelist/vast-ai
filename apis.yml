@@ -184,6 +184,9 @@ apis:
   - type: OpenAPI
     url: openapi/vast-ai-volumes-api-openapi.yml
 common:
+- type: CapabilityMap
+  url: capabilities/vast-ai-capability-edges.yml
+  name: Vast.ai Business Capability Map
 - type: AgenticAccess
   url: agentic-access/vast-ai-agentic-access.yml
 - type: TrustCenter
