@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Vast.ai Accounts Instances API
+  title: Vast.ai Instances API
   description: API for managing cloud GPU instances, volumes, and resources on Vast.ai
   version: 1.0.0
   contact:
@@ -75,6 +75,8 @@ paths:
                 $ref: '#/components/schemas/Error'
       tags:
       - Instances
+      operationId: postApiV0InstancesByIdSsh
+      x-operation-id-source: derived
   /api/v0/commands/copy_direct/:
     delete:
       summary: cancel copy
@@ -283,6 +285,8 @@ paths:
                     example: No such instance.
       tags:
       - Instances
+      operationId: deleteApiV0CommandsRclone
+      x-operation-id-source: derived
     post:
       summary: cloud copy
       description: Starts a cloud copy operation by sending a command to the remote server. The operation can transfer data between an instance and a cloud service.
@@ -345,6 +349,8 @@ paths:
       - BearerAuth: []
       tags:
       - Instances
+      operationId: postApiV0CommandsRclone
+      x-operation-id-source: derived
   /api/v0/instances/bid_price/{id}/:
     put:
       summary: change bid
@@ -437,12 +443,14 @@ paths:
                     example: API requests too frequent endpoint threshold=5.5
       tags:
       - Instances
+      operationId: putApiV0InstancesBidPriceById
+      x-operation-id-source: derived
   /api/v0/asks/{id}/:
     put:
       summary: create instance
       description: 'Creates a new instance by accepting an "ask" contract from a provider. This is the main endpoint for launching new instances on Vast.ai.
 
-        CLI Usage: vast create instance <offer_id> [options]'
+        CLI Usage: vast create instance [options]'
       security:
       - BearerAuth: []
       parameters:
@@ -704,13 +712,15 @@ paths:
                     example: API requests too frequent endpoint threshold=4.5
       tags:
       - Instances
+      operationId: putApiV0AsksById
+      x-operation-id-source: derived
   /api/v0/instances/{id}/:
     delete:
       summary: destroy instance
       description: 'Destroys/deletes an instance permanently. This is irreversible and will delete all data.
 
 
-        CLI Usage: vast-ai destroy instance <id>
+        CLI Usage: vast-ai destroy instance
 
         Example: vast-ai destroy instance 4242'
       parameters:
@@ -789,6 +799,8 @@ paths:
       - BearerAuth: []
       tags:
       - Instances
+      operationId: deleteApiV0InstancesById
+      x-operation-id-source: derived
     put:
       summary: manage instance
       description: 'Manage instance state and labels. The operation is determined by the request body parameters.
@@ -796,11 +808,11 @@ paths:
 
         CLI Usage:
 
-        - To stop: vastai stop instance <ID>
+        - To stop: vastai stop instance
 
-        - To start: vastai start instance <ID>
+        - To start: vastai start instance
 
-        - To label: vastai label instance <ID> <label>'
+        - To label: vastai label instance'
       security:
       - BearerAuth: []
       parameters:
@@ -868,6 +880,8 @@ paths:
                     example: API requests too frequent endpoint threshold=1.0
       tags:
       - Instances
+      operationId: putApiV0InstancesById
+      x-operation-id-source: derived
     get:
       summary: show instance
       description: 'Retrieves the details of a specific instance for the authenticated user.
@@ -917,6 +931,8 @@ paths:
                     example: API requests too frequent endpoint threshold=2.0
       tags:
       - Instances
+      operationId: getApiV0InstancesById
+      x-operation-id-source: derived
   /api/v0/instances/{id}/ssh/{key}/:
     delete:
       summary: detach ssh-key
@@ -925,8 +941,7 @@ paths:
         that key.
 
 
-
-        CLI Usage: vastai detach <instance_id> <ssh_key_id>
+        CLI Usage: vastai detach
 
 
         Example: vastai detach 99999 12345'
@@ -1024,6 +1039,8 @@ paths:
                     example: Error deleting SSH key from instance
       tags:
       - Instances
+      operationId: deleteApiV0InstancesByIdSshByKey
+      x-operation-id-source: derived
   /api/v0/instances/command/{id}/:
     put:
       summary: execute
@@ -1032,7 +1049,7 @@ paths:
         The command output can be retrieved from the returned result URL.
 
 
-        CLI Usage: vastai execute <instance_id> <command>
+        CLI Usage: vastai execute
 
         Example: vastai execute 12345 "ls -l"'
       security:
@@ -1140,6 +1157,8 @@ paths:
                     example: Invalid json_body
       tags:
       - Instances
+      operationId: putApiV0InstancesCommandById
+      x-operation-id-source: derived
   /api/v0/instances/request_logs/{id}:
     put:
       summary: show logs
@@ -1225,6 +1244,8 @@ paths:
                     example: Not authorized to view logs for this instance
       tags:
       - Instances
+      operationId: putApiV0InstancesRequestLogsById
+      x-operation-id-source: derived
   /api/v0/instances/prepay/{id}/:
     put:
       summary: prepay instance
@@ -1235,7 +1256,7 @@ paths:
         Maximum discount is typically 40%.
 
 
-        CLI Usage: vastai prepay instance <ID> <AMOUNT>
+        CLI Usage: vastai prepay instance
 
         Example: vastai prepay instance 1234 500.0'
       security:
@@ -1320,6 +1341,8 @@ paths:
                     example: API requests too frequent endpoint threshold=2.0
       tags:
       - Instances
+      operationId: putApiV0InstancesPrepayById
+      x-operation-id-source: derived
   /api/v0/instances/reboot/{id}/:
     put:
       summary: reboot instance
@@ -1328,7 +1351,7 @@ paths:
         and executes docker stop/start commands on the host machine.
 
 
-        CLI Usage: vastai reboot instance <ID>'
+        CLI Usage: vastai reboot instance'
       security:
       - BearerAuth: []
       parameters:
@@ -1385,6 +1408,8 @@ paths:
                     example: API requests too frequent endpoint threshold=1.0
       tags:
       - Instances
+      operationId: putApiV0InstancesRebootById
+      x-operation-id-source: derived
   /api/v0/instances/recycle/{id}/:
     put:
       summary: recycle instance
@@ -1393,7 +1418,7 @@ paths:
         Updates container status to ''recycling'' and executes docker stop/remove commands on the host machine.
 
 
-        CLI Usage: vastai recycle instance <ID>'
+        CLI Usage: vastai recycle instance'
       security:
       - BearerAuth: []
       parameters:
@@ -1450,6 +1475,8 @@ paths:
                     example: API requests too frequent endpoint threshold=1.0
       tags:
       - Instances
+      operationId: putApiV0InstancesRecycleById
+      x-operation-id-source: derived
   /api/v0/instances/{instance_id}/ssh/:
     get:
       summary: show ssh-keys
@@ -1499,6 +1526,8 @@ paths:
                 $ref: '#/components/schemas/Error'
       tags:
       - Instances
+      operationId: getApiV0InstancesByInstanceIdSsh
+      x-operation-id-source: derived
   /api/v0/instances/:
     get:
       summary: show instances
@@ -1555,8 +1584,26 @@ paths:
                     example: API requests too frequent endpoint threshold=2.0
       tags:
       - Instances
+      operationId: getApiV0Instances
+      x-operation-id-source: derived
 components:
   schemas:
+    SimpleBooleanSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+        msg:
+          type: string
     Instance:
       type: object
       description: Detailed information about an instance.
@@ -1752,22 +1799,6 @@ components:
           - 8080
           - 8081
           description: List of additional ports exposed by the instance.
-    Error:
-      type: object
-      properties:
-        success:
-          type: boolean
-          example: false
-        error:
-          type: string
-        msg:
-          type: string
-    SimpleBooleanSuccessResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          example: true
   securitySchemes:
     bearerAuth:
       type: http

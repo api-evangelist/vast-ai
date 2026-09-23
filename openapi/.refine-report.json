@@ -1,16 +1,7 @@
 {
   "provider": "vast-ai",
   "sources": [
-    "vast-ai-accounts-api-openapi.yml",
-    "vast-ai-billing-api-openapi.yml",
-    "vast-ai-instances-api-openapi.yml",
-    "vast-ai-machines-api-openapi.yml",
-    "vast-ai-network-volumes-api-openapi.yml",
-    "vast-ai-search-api-openapi.yml",
-    "vast-ai-serverless-api-openapi.yml",
-    "vast-ai-team-api-openapi.yml",
-    "vast-ai-templates-api-openapi.yml",
-    "vast-ai-volumes-api-openapi.yml"
+    "_original/vast-ai-openapi.json"
   ],
   "outputs": [
     "vast-ai-accounts-api-openapi.yml",
@@ -27,6 +18,31 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "vast-ai-openapi.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "vast-ai-openapi.json: declared missing tag: Accounts",
+    "vast-ai-openapi.json: declared missing tag: Billing",
+    "vast-ai-openapi.json: declared missing tag: Instances",
+    "vast-ai-openapi.json: declared missing tag: Machines",
+    "vast-ai-openapi.json: declared missing tag: Network Volumes",
+    "vast-ai-openapi.json: declared missing tag: Search",
+    "vast-ai-openapi.json: declared missing tag: Serverless",
+    "vast-ai-openapi.json: declared missing tag: Team",
+    "vast-ai-openapi.json: declared missing tag: Templates",
+    "vast-ai-openapi.json: declared missing tag: Volumes",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "vast-ai-accounts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "vast-ai-billing-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "vast-ai-instances-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "vast-ai-machines-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "vast-ai-network-volumes-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "vast-ai-search-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "vast-ai-serverless-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "vast-ai-team-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "vast-ai-templates-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "vast-ai-volumes-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

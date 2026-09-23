@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Vast.ai Accounts Team API
+  title: Vast.ai Team API
   description: API for managing cloud GPU instances, volumes, and resources on Vast.ai
   version: 1.0.0
   contact:
@@ -33,7 +33,7 @@ paths:
         4. Adds the creating user as a team member
 
 
-        CLI Usage: vast create team --name <team_name>'
+        CLI Usage: vast create team --name'
       security:
       - BearerAuth: []
       tags:
@@ -110,13 +110,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      operationId: postApiV0Team
+      x-operation-id-source: derived
   /api/v0/team/role:
     post:
       summary: create team role
       description: 'Creates a new role within a team. Only team owners or managers with the appropriate permissions can perform this operation.
 
 
-        CLI Usage: vast create team role --name <role_name> --permissions <permissions_json>'
+        CLI Usage: vast create team role --name --permissions'
       security:
       - BearerAuth: []
       tags:
@@ -181,6 +183,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      operationId: postApiV0TeamRole
+      x-operation-id-source: derived
   /api/v0/team/:
     delete:
       summary: destroy team
@@ -233,6 +237,8 @@ paths:
                       example: No such user.
       tags:
       - Team
+      operationId: deleteApiV0Team
+      x-operation-id-source: derived
   /api/v0/team/invite/:
     post:
       summary: invite team member
@@ -317,6 +323,8 @@ paths:
                     example: 'Error: invitation already sent to user@example.com only 300 seconds ago.'
       tags:
       - Team
+      operationId: postApiV0TeamInvite
+      x-operation-id-source: derived
   /api/v0/team/members/{id}:
     delete:
       summary: remove team member
@@ -429,6 +437,8 @@ paths:
       - BearerAuth: []
       tags:
       - Team
+      operationId: deleteApiV0TeamMembersById
+      x-operation-id-source: derived
   /api/v0/team/roles/{id}:
     delete:
       summary: remove team role
@@ -524,6 +534,8 @@ paths:
       - BearerAuth: []
       tags:
       - Team
+      operationId: deleteApiV0TeamRolesById
+      x-operation-id-source: derived
   /api/v0/team/members/:
     get:
       summary: show team members
@@ -577,6 +589,8 @@ paths:
                 $ref: '#/components/schemas/Error'
       tags:
       - Team
+      operationId: getApiV0TeamMembers
+      x-operation-id-source: derived
   /api/v0/team/roles/{id}/:
     put:
       summary: update team role
@@ -622,6 +636,8 @@ paths:
       - BearerAuth: []
       tags:
       - Team
+      operationId: putApiV0TeamRolesById
+      x-operation-id-source: derived
   /api/v0/team/roles-full/:
     get:
       summary: show team roles
@@ -669,6 +685,8 @@ paths:
                 $ref: '#/components/schemas/Error'
       tags:
       - Team
+      operationId: getApiV0TeamRolesFull
+      x-operation-id-source: derived
 components:
   schemas:
     Error:

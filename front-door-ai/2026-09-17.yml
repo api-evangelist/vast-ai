@@ -1,0 +1,34 @@
+# Front Door AI Index — vast-ai — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: vast-ai
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: vast.ai
+  final_host: vast.ai
+  ownership: own
+  owner: vast-ai
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 22
+  host_score: 22
+  density: 33.69
+  words: 653
+  tiers:
+    agentic: 4
+    core: 17
+    model: 1
+  ambiguous: 3
+  top_terms:
+    AI: 9
+    ML: 3
+    agent: 3
+    deep learning: 2
+    inference: 2
+    machine learning: 2
+    AI agent: 1
+    fine-tune: 1
+    foundation model: 1
+    transformer: 1

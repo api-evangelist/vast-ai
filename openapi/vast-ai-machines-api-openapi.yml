@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Vast.ai Accounts Machines API
+  title: Vast.ai Machines API
   description: API for managing cloud GPU instances, volumes, and resources on Vast.ai
   version: 1.0.0
   contact:
@@ -67,6 +67,8 @@ paths:
       - BearerAuth: []
       tags:
       - Machines
+      operationId: putApiV0MachinesByMachineIdCancelMaint
+      x-operation-id-source: derived
   /api/v0/machines/{machine_id}/cleanup:
     put:
       summary: cleanup machine
@@ -147,6 +149,8 @@ paths:
                     example: API requests too frequent endpoint threshold=8
       tags:
       - Machines
+      operationId: putApiV0MachinesByMachineIdCleanup
+      x-operation-id-source: derived
   /api/v0/machines/create_asks/:
     put:
       summary: list machine
@@ -155,7 +159,7 @@ paths:
         Allows setting pricing, minimum GPU requirements, end date and discount rates.
 
 
-        CLI Usage: vast list machine <machine_id> [options]'
+        CLI Usage: vast list machine [options]'
       security:
       - BearerAuth: []
       requestBody:
@@ -249,6 +253,8 @@ paths:
                     example: Only machine owner can create ask contracts
       tags:
       - Machines
+      operationId: putApiV0MachinesCreateAsks
+      x-operation-id-source: derived
   /api/v0/machines/{machine_id}/defjob:
     delete:
       summary: remove defjob
@@ -301,13 +307,15 @@ paths:
                     example: API requests too frequent endpoint threshold=1.2
       tags:
       - Machines
+      operationId: deleteApiV0MachinesByMachineIdDefjob
+      x-operation-id-source: derived
   /api/v0/machines/{machine_id}/reports:
     get:
       summary: show reports
       description: 'Retrieves a list of the most recent reports for a given machine. Each report includes details such as the problem identified, a message describing the issue, and the timestamp when the report was created.
 
 
-        CLI Usage: vastai reports <machine_id>'
+        CLI Usage: vastai reports'
       security:
       - BearerAuth: []
       parameters:
@@ -351,6 +359,8 @@ paths:
                 $ref: '#/components/schemas/Error'
       tags:
       - Machines
+      operationId: getApiV0MachinesByMachineIdReports
+      x-operation-id-source: derived
   /api/v0/machines/{machine_id}/dnotify:
     put:
       summary: schedule maint
@@ -446,6 +456,8 @@ paths:
                     example: API requests too frequent endpoint threshold=2.5
       tags:
       - Machines
+      operationId: putApiV0MachinesByMachineIdDnotify
+      x-operation-id-source: derived
   /api/v0/machines/create_bids/:
     put:
       summary: set defjob
@@ -543,6 +555,8 @@ paths:
                     example: API requests too frequent endpoint threshold=2.8
       tags:
       - Machines
+      operationId: putApiV0MachinesCreateBids
+      x-operation-id-source: derived
   /api/v0/machines/{machine_id}/minbid:
     put:
       summary: set min-bid
@@ -611,6 +625,8 @@ paths:
                     example: API requests too frequent endpoint threshold=1.5
       tags:
       - Machines
+      operationId: putApiV0MachinesByMachineIdMinbid
+      x-operation-id-source: derived
   /api/v0/machines/:
     get:
       summary: show machines
@@ -656,7 +672,7 @@ paths:
       description: 'Removes all ''ask'' type offer contracts for a specified machine, effectively unlisting it from being available for rent.
 
 
-        CLI Usage: vastai unlist machine <id>'
+        CLI Usage: vastai unlist machine'
       security:
       - BearerAuth: []
       parameters:
@@ -707,6 +723,8 @@ paths:
                     example: API requests too frequent endpoint threshold=1.8
       tags:
       - Machines
+      operationId: deleteApiV0MachinesByMachineIdAsks
+      x-operation-id-source: derived
 components:
   schemas:
     Error:
