@@ -44,7 +44,7 @@ tags:
 - Cloud
 - Compute
 - GPU
-- Machine-Learning
+- Machine Learning
 - Marketplace
 - Serverless
 tags_raw:
@@ -55,6 +55,7 @@ tags_raw:
 - Machine Learning
 - Marketplace
 - Serverless
+- Machine-Learning
 apis:
 - aid: vast-ai:rest-api
   name: Vast.ai REST API
@@ -80,8 +81,6 @@ apis:
     url: https://docs.vast.ai/api/
   - type: Authentication
     url: https://docs.vast.ai/api/authentication
-  - url: graphql/vast-ai-graphql.md
-    type: GraphQL
 - aid: vast-ai:vast-ai-accounts-api
   name: Vast.ai Accounts API
   description: The Accounts API from Vast.ai — 13 operation(s) for accounts.
