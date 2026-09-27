@@ -1532,6 +1532,15 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        msg:
+          type: string
+          example: Operation completed successfully
     Error:
       type: object
       properties:
@@ -1542,15 +1551,6 @@ components:
           type: string
         msg:
           type: string
-    SuccessResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          example: true
-        msg:
-          type: string
-          example: Operation completed successfully
   securitySchemes:
     bearerAuth:
       type: http

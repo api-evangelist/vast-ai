@@ -1588,22 +1588,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    SimpleBooleanSuccessResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          example: true
-    Error:
-      type: object
-      properties:
-        success:
-          type: boolean
-          example: false
-        error:
-          type: string
-        msg:
-          type: string
     Instance:
       type: object
       description: Detailed information about an instance.
@@ -1799,6 +1783,22 @@ components:
           - 8080
           - 8081
           description: List of additional ports exposed by the instance.
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+        msg:
+          type: string
+    SimpleBooleanSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
   securitySchemes:
     bearerAuth:
       type: http
