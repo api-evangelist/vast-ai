@@ -552,6 +552,16 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+        msg:
+          type: string
     Template:
       type: object
       properties:
@@ -564,16 +574,6 @@ components:
         image:
           type: string
           description: Docker image name
-    Error:
-      type: object
-      properties:
-        success:
-          type: boolean
-          example: false
-        error:
-          type: string
-        msg:
-          type: string
   securitySchemes:
     bearerAuth:
       type: http

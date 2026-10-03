@@ -1588,6 +1588,12 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
+    SimpleBooleanSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
     Instance:
       type: object
       description: Detailed information about an instance.
@@ -1793,12 +1799,6 @@ components:
           type: string
         msg:
           type: string
-    SimpleBooleanSuccessResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          example: true
   securitySchemes:
     bearerAuth:
       type: http
