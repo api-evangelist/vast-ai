@@ -1,0 +1,12 @@
+{
+ "url": "https://docs.vast.ai/api/openapi.json",
+ "requested_url": "https://docs.vast.ai/api/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 361188,
+ "sha256": "5f97190fa397ce9ce9953fd26f67f588eb6ba6a7067e9953b3772a05c0477024",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
