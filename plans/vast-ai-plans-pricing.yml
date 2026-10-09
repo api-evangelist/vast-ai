@@ -1,52 +1,67 @@
-specification: API Commons Plans
-specificationVersion: '0.1'
-schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
-provider: Vast.ai
-providerId: vast-ai
-created: '2026-05-22'
-modified: '2026-05-22'
-tags:
-- AI
-- Cloud
-- Compute
-- GPU
-- Machine Learning
-- Marketplace
-- Serverless
-description: Machine-readable plans scaffold for the Vast.ai API surface. Conforms to the API Commons Plans schema. Tier limits
-  and prices are scaffold defaults; replace with provider-published values.
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-10-07'
+method: searched
+source: https://vast.ai/pricing
+sources:
+- https://vast.ai/pricing
+provenance:
+  tool: all/0-working/economics/harvest_pricing.py
+  run: 20261007T104522
+  grounding: every price_text was found verbatim in the fetched page text
+audience: developer-api
+pricing_basis: usage-other
+delivery:
+  delivery: managed
+  method: page
+  read: '2026-10-07'
+  managed_tier: On-Demand
+published: false
+note: No numeric price is published on the pricing page; Page describes live market-based GPU pricing
+  tiers but the visible text contains no numeric rates; live price cards and calculator did not render.
+plan_count: 3
 plans:
-- id: vast-ai-free
-  name: Free
-  type: freemium
-  description: Free entry tier for the Vast.ai API surface. Intended for evaluation, prototyping, and low-volume integrations.
-    Real limits and pricing must be reconciled with the provider's published plan documentation.
-  entries:
-  - label: API Requests
-    description: Monthly API request quota across all included endpoints
-    name: api_requests
-    type: quota
-    metric: requests
-    limit: 1000
-    timeFrame: month
-    geo: global
-    domains:
-    - https://console.vast.ai/api/v0
-    unit: 1
-    price: '0.00'
-    userMultiplied: false
-  - label: Rate Limit
-    description: Maximum requests per minute on the free tier
-    name: rate_limit
-    type: rate
-    metric: requests_per_minute
-    limit: 10
-    timeFrame: minute
-    geo: global
-    domains:
-    - https://console.vast.ai/api/v0
-    unit: 1
-    price: '0.00'
-references:
-- name: Vast.ai API Documentation
-  url: https://raw.githubusercontent.com/api-evangelist/vast-ai/refs/heads/main/apis.yml
+- name: On-Demand
+  price_text: Per-second billing
+  period: per-use
+  unit: GPU-second
+  included_quota: Guaranteed uptime. Best for production.
+- name: Interruptible
+  price_text: 50%+ cheaper.
+  period: per-use
+  unit: GPU-second
+  included_quota: Best for batch training. Preemptible — may be reclaimed
+- name: Reserved
+  price_text: Contact Sales
+  period: month
+  included_quota: 1, 3, or 6 month terms
+x-canonical:
+  generated: '2026-10-08'
+  vocabulary: all/0-working/economics/plans-canonical.yml
+  models:
+  - metered
+  units:
+  - compute
+  plans:
+  - name: On-Demand
+    access: other
+    model: metered
+    model_how: derived
+    units:
+    - compute
+    periods:
+    - other
+  - name: Interruptible
+    access: other
+    model: metered
+    model_how: derived
+    units:
+    - compute
+    periods:
+    - other
+  - name: Reserved
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - month
