@@ -320,74 +320,6 @@ paths:
       x-operation-id-source: derived
 components:
   schemas:
-    Volume:
-      type: object
-      properties:
-        instances:
-          type: array
-          description: List of instances using this volume
-          items:
-            type: object
-        driver_version:
-          type: string
-          description: NVIDIA driver version
-        cuda_max_good:
-          type: number
-          description: Maximum CUDA version supported
-        machine_id:
-          type: integer
-          description: Unique identifier for the machine
-        public_ipaddr:
-          type: string
-          description: Public IP address
-        reliability2:
-          type: number
-          description: Reliability score of the host
-        host_id:
-          type: integer
-          description: Unique identifier for the host
-        cpu_name:
-          type: string
-          description: Name/model of the CPU
-        mobo_name:
-          type: string
-          description: Name/model of the motherboard
-        disk_space:
-          type: number
-          description: Disk space in GB
-        disk_name:
-          type: string
-          description: Name/model of the disk
-        inet_up:
-          type: number
-          description: Upload internet speed in Mbps
-        inet_down:
-          type: number
-          description: Download internet speed in Mbps
-        storage_total_cost:
-          type: number
-          description: Total cost for storage
-        os_version:
-          type: string
-          description: Operating system version
-        verification:
-          type: string
-          description: Verification status
-        static_ip:
-          type: boolean
-          description: Whether the machine has a static IP
-        cpu_arch:
-          type: string
-          description: CPU architecture
-        start_date:
-          type: number
-          description: Start date as Unix timestamp
-        id:
-          type: integer
-          description: Unique identifier for the volume
-        status:
-          type: string
-          description: Current status of the volume
     VolumeOffer:
       type: object
       properties:
@@ -506,6 +438,74 @@ components:
         vms_enabled:
           type: boolean
           description: Whether VMs are enabled
+    Volume:
+      type: object
+      properties:
+        instances:
+          type: array
+          description: List of instances using this volume
+          items:
+            type: object
+        driver_version:
+          type: string
+          description: NVIDIA driver version
+        cuda_max_good:
+          type: number
+          description: Maximum CUDA version supported
+        machine_id:
+          type: integer
+          description: Unique identifier for the machine
+        public_ipaddr:
+          type: string
+          description: Public IP address
+        reliability2:
+          type: number
+          description: Reliability score of the host
+        host_id:
+          type: integer
+          description: Unique identifier for the host
+        cpu_name:
+          type: string
+          description: Name/model of the CPU
+        mobo_name:
+          type: string
+          description: Name/model of the motherboard
+        disk_space:
+          type: number
+          description: Disk space in GB
+        disk_name:
+          type: string
+          description: Name/model of the disk
+        inet_up:
+          type: number
+          description: Upload internet speed in Mbps
+        inet_down:
+          type: number
+          description: Download internet speed in Mbps
+        storage_total_cost:
+          type: number
+          description: Total cost for storage
+        os_version:
+          type: string
+          description: Operating system version
+        verification:
+          type: string
+          description: Verification status
+        static_ip:
+          type: boolean
+          description: Whether the machine has a static IP
+        cpu_arch:
+          type: string
+          description: CPU architecture
+        start_date:
+          type: number
+          description: Start date as Unix timestamp
+        id:
+          type: integer
+          description: Unique identifier for the volume
+        status:
+          type: string
+          description: Current status of the volume
   securitySchemes:
     bearerAuth:
       type: http
