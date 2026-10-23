@@ -486,3 +486,9 @@ components:
       in: query
       name: api_key
       description: API key must be provided as a query parameter
+x-provenance:
+  method: harvested
+  publisher: Vast.ai
+  source: https://docs.vast.ai/api/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
